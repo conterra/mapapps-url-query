@@ -431,6 +431,19 @@
 		<tag>HEAD</tag>
 	</scm>
 	
+	<distributionManagement>
+		<repository>
+			<id>ct-dist-releases-file</id>
+			<name>repository for sdi.suite releases</name>
+			<url>${release.deployment.url}</url>
+		</repository>
+		<snapshotRepository>
+			<id>ct-dist-snapshots-file</id>
+			<name>repository for sdi.suite snapshots</name>
+			<url>${snapshot.deployment.url}</url>
+		</snapshotRepository>
+	</distributionManagement>
+	
 	<profiles>
 		<profile>
 			<id>env-dev</id>
