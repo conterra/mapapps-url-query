@@ -1,0 +1,16 @@
+# Development Filter Sample File
+#-----------------------------------------------------------------------------------
+# Copy this file and rename it to build.properties
+#
+# You can use the "-Denv=dev" profile
+# to replace the properties defined in the pom.xml
+#
+# Sample usage
+#
+#     mvn install -Denv=dev -Dlocal.configfile=%pathtoprojectroot%/build.properties
+#
+#-----------------------------------------------------------------------------------
+# URL to the remote map.apps instance
+mapapps.remote.base=http://localhost:8080/ct-mapapps-webapp-3.7.0
+user=admin
+password=admin

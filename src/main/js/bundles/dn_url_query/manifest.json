@@ -1,0 +1,77 @@
+{
+  "Bundle-SymbolicName": "dn_url_query",
+  "Bundle-Version": "${project.version}",
+  "Bundle-Name": "${bundleName}",
+  "Bundle-Description": "${bundleDescription}",
+  "Bundle-Vendor": "con terra GmbH",
+  "Bundle-Category": [
+    "parameter",
+    "URL"
+  ],
+  "Require-Bundle": [
+    {
+      "name": "parametermanager",
+      "version": "^3.7.0"
+    },
+    {
+      "name": "map",
+      "version": "^3.7.0"
+    },
+    {
+      "name": "coordinatetransformer",
+      "version": "^3.7.0",
+      "policy": "optional"
+    },
+    {
+      "name": "redlining",
+      "version": "^3.7.0",
+      "policy": "optional"
+    }
+  ],
+  "Product-Name": "devnet-mapapps-url-query",
+  "Components": [
+    {
+      "name": "FeatureQueryResolver",
+      "provides": "ct.api.parametermanager.Parametrizable",
+      "properties": {
+        "notifications": true,
+        "zoomToResults": {
+          "activate": true,
+          "factor": 1,
+          "defaultScale": 25000
+        },
+        "stores": []
+      },
+      "references": [
+        {
+          "name": "_log",
+          "providing": "ct.framework.api.LogService"
+        },
+        {
+          "name": "_mapModel",
+          "providing": "ct.mapping.map.MapModel"
+        },
+        {
+          "name": "_mapState",
+          "providing": "ct.mapping.map.MapState",
+          "cardinality": "0..1"
+        },
+        {
+          "name": "_coordinateTransformer",
+          "providing": "ct.api.coordinatetransformer.CoordinateTransformer",
+          "cardinality": "0..1"
+        },
+        {
+          "name": "_eraseTool",
+          "providing": "redlining.GeometryRenderer",
+          "cardinality": "0..1"
+        },
+        {
+          "name": "store",
+          "providing": "ct.api.Store",
+          "cardinality": "0..n"
+        }
+      ]
+    }
+  ]
+}

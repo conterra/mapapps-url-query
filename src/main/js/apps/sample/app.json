@@ -1,0 +1,197 @@
+{
+  "properties": {
+    "amdPackages": "apprt@^3.7.0"
+  },
+  "load": {
+    "bundleLocations": [
+      "localbundles",
+      "bundles"
+    ],
+    "allowedBundles": [
+      "system@^3.7.0",
+      "templatelayout@^3.7.0",
+      "map@^3.7.0",
+      "notifier@^3.7.0",
+      "toolset@^3.7.0",
+      "parametermanager@^3.7.0",
+      "agssearch@^3.7.0",
+      "notifier@^3.7.0",
+      "dn_url_query"
+    ]
+  },
+  "bundles": {
+    "map": {
+      "MapModelFactory": {
+        "_configData": {
+          "maps": [
+            {
+              "baseLayer": [
+                {
+                  "id": "streets",
+                  "title": "Streets",
+                  "service": "streets",
+                  "layers": [
+                    "*"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "MapState": {
+        "initialExtent": {
+          "xmin": 600000,
+          "ymin": 5800000,
+          "xmax": 1700000,
+          "ymax": 7600000,
+          "spatialReference": {
+            "wkid": 3857
+          }
+        }
+      },
+      "MappingResourceRegistryFactory": {
+        "_knownServices": {
+          "services": [
+            {
+              "id": "streets",
+              "type": "AGS_TILED",
+              "url": "https://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer"
+            }
+          ]
+        }
+      }
+    },
+    "agssearch": {
+      "AutoStoreRegistration": {
+        "componentEnabled": false
+      },
+      "AGSStore": [
+        {
+          "id": "bathingwater_1",
+          "title": "Bathing water quality in Europe (Search on ArcGIS for Server Map Service)",
+          "description": "Search for bathing quality in Europe by country code",
+          "omniSearchLabelAttr": "cc",
+          "omniSearchSearchAttr": "cc",
+          "idProperty": "OBJECTID",
+          "url": "http://water.discomap.eea.europa.eu/arcgis/rest/services/BathingWater/BathingWater_Dyna_WM/MapServer/0",
+          "useIn": [
+            "omnisearch",
+            "selection"
+          ],
+          "filterOptions": {
+            "suggestContains": true
+          },
+          "omniSearchTypingDelay": 500,
+          "omniSearchPageSize": 20,
+          "omniSearchDefaultLabel": "Country code...",
+          "fetchIdProperty": true
+        },
+        {
+          "id": "ct_countries_1",
+          "title": "Countries (World)",
+          "description": "",
+          "omniSearchLabelAttr": "placename",
+          "omniSearchSearchAttr": "code",
+          "idProperty": "objectid",
+          "url": "https://services.conterra.de/arcgis/rest/services/common/grenzen/MapServer/3",
+          "useIn": [
+            "omnisearch",
+            "selection"
+          ],
+          "filterOptions": {
+            "suggestContains": true
+          },
+          "omniSearchTypingDelay": 500,
+          "omniSearchPageSize": 20,
+          "omniSearchDefaultLabel": "Country code...",
+          "fetchIdProperty": true,
+          "enablePagination": false,
+          "type": "Dynamic"
+        }
+      ]
+    },
+    "dn_url_query": {
+      "FeatureQueryResolver": {
+        "notifications": false,
+        "zoomToResults": {
+          "activate": false,
+          "factor": 1.25,
+          "defaultScale": 5000
+        },
+        "symbols": {
+          "point": {
+            "type": "esriPMS",
+            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Water_drop.svg/144px-Water_drop.svg.png",
+            "width": 10,
+            "height": 16,
+            "xoffset": 0,
+            "yoffset": -8
+          },
+          "polygon": {
+            "type": "esriSFS",
+            "style": "esriSFSSolid",
+            "color": [
+              125,
+              205,
+              234,
+              100
+            ],
+            "outline": {
+              "type": "esriSLS",
+              "style": "esriSLSSolid",
+              "color": [
+                10,
+                10,
+                10,
+                255
+              ],
+              "width": 1
+            }
+          }
+        },
+        "stores": {
+          "bathingwater_1": {
+            "filter": {
+              "y2014": {
+                "$eqw": "good"
+              }
+            },
+            "options": {
+              "count": 50
+            },
+            "zoomToResults": {
+              "activate": false
+            }
+          },
+          "ct_countries_1": {
+            "filter": {
+              "$or": [
+                {
+                  "code": {
+                    "$eqw": "J*"
+                  }
+                },
+                {
+                  "code": {
+                    "$eqw": "*Q"
+                  }
+                }
+              ]
+            },
+            "operator": "$or",
+            "options": {
+              "count": 15
+            },
+            "notifications": true,
+            "zoomToResults": {
+              "activate": true,
+              "factor": 1.15,
+              "defaultScale": 15000
+            }
+          }
+        }
+      }
+    }
+  }
+}

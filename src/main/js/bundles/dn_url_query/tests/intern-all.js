@@ -1,0 +1,3 @@
+define([
+    "./FeatureQueryResolver"
+], 1);
