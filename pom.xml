@@ -8,6 +8,7 @@
 	
 	<name>URL Query</name>
 	<url>https://developernetwork.conterra.de</url>
+	<inceptionYear>2017</inceptionYear>
 	<organization>
 		<name>con terra - Gesellschaft fuer Angewandte Informationstechnologie mbH</name>
 		<url>https://www.conterra.de</url>
@@ -24,6 +25,7 @@
 		<ct.jsrt-test.version>1.0.7</ct.jsrt-test.version>
 		
 		<!-- plugin versions -->
+		<plugin.license.version>1.8</plugin.license.version>
 		<plugin.resources.version>3.0.2</plugin.resources.version>
 		<plugin.source.version>3.0.1</plugin.source.version>
 		<plugin.jar.version>3.0.2</plugin.jar.version>
@@ -132,6 +134,28 @@
 		
 		<pluginManagement>
 			<plugins>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>license-maven-plugin</artifactId>
+					<version>${plugin.license.version}</version>
+					<configuration>
+						<inceptionYear>${project.inceptionYear}</inceptionYear>
+						<organizationName>${project.organization.name}</organizationName>
+						<projectName>${project.name}</projectName>
+						<force>true</force>
+						<licenseFile>${project.basedir}/LICENSE</licenseFile>
+						<licenseName>apache_v2</licenseName>
+					</configuration>
+					<executions>
+						<execution>
+							<id>update-project-license</id>
+							<goals>
+								<goal>update-project-license</goal>
+							</goals>
+							<phase>generate-resources</phase>
+						</execution>
+					</executions>
+				</plugin>
 				<plugin>
 					<groupId>de.conterra.mapapps</groupId>
 					<artifactId>mapapps-maven-plugin</artifactId>
@@ -323,6 +347,10 @@
 			</plugins>
 		</pluginManagement>
 		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+			</plugin>
 			<plugin>
 				<groupId>de.conterra.maven</groupId>
 				<artifactId>setproperties-maven-plugin</artifactId>

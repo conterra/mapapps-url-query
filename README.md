@@ -16,9 +16,9 @@ https://developernetwork.conterra.de/en/documentation/mapapps/38/developers-docu
 
 All other configuration is optional.
 
-#### Configurable Components of dn_querybuilder:
+#### Configurable Components of dn_url_query
 
-##### FeatureQueryResolver:
+##### FeatureQueryResolver
 ```json
       "FeatureQueryResolver": {
         "notifications": false,
