@@ -32,6 +32,7 @@
 		<plugin.jetty.version>9.4.0.v20161208</plugin.jetty.version>
 		<plugin.properties.version>1.0.0</plugin.properties.version>
 		<plugin.replacer.version>1.5.3</plugin.replacer.version>
+		<plugin.assembly.version>3.0.0</plugin.assembly.version>
 		<plugin.release.version>2.5.3</plugin.release.version>
 		<plugin.githubrelease.version>1.1.1</plugin.githubrelease.version>
 		<plugin.scm.version>1.9.5</plugin.scm.version>
@@ -188,7 +189,7 @@
 							<configuration>
 								<templateName>${project.artifactId}</templateName>
 								<templateTitle>${project.artifactId}-${project.version}</templateTitle>
-								<templateFile>${project.build.directory}/${project.artifactId}-${project.version}.zip</templateFile>
+								<templateFile>${project.build.directory}/${project.artifactId}-sample-app.zip</templateFile>
 								<templateResources>
 									<templateResource>
 										<directory>${js.build.outputPath}/apps/${default.app.name}</directory>
@@ -359,6 +360,26 @@
 					</executions>
 				</plugin>
 				<plugin>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>${plugin.assembly.version}</version>
+					<configuration>
+						<descriptors>
+							<descriptor>src/main/config/assembly.xml</descriptor>
+						</descriptors>
+						<finalName>${project.artifactId}-bundle</finalName>
+						<appendAssemblyId>false</appendAssemblyId>
+					</configuration>
+					<executions>
+						<execution>
+							<id>make-zip</id>
+							<phase>package</phase>
+							<goals>
+								<goal>single</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
 					<artifactId>maven-release-plugin</artifactId>
 					<version>${plugin.release.version}</version>
 					<configuration>
@@ -413,6 +434,9 @@
 			<plugin>
 				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
 			</plugin>
 			<plugin>
 				<artifactId>maven-release-plugin</artifactId>
