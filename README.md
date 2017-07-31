@@ -1,6 +1,6 @@
 # URL Query
 This bundle queries features by an URL parameter.
-So you can query features by their metadata and show them on app startup. 
+So you are able to query features by their metadata and show them on app startup. 
 
 Sample App
 ------------------
