@@ -166,21 +166,6 @@
             }
           },
           "ct_countries_1": {
-            "filter": {
-              "$or": [
-                {
-                  "code": {
-                    "$eqw": "J*"
-                  }
-                },
-                {
-                  "code": {
-                    "$eqw": "*Q"
-                  }
-                }
-              ]
-            },
-            "operator": "$or",
             "options": {
               "count": 15
             },

@@ -8,7 +8,7 @@ Coming soon...
 
 Installation Guide
 ------------------
-**Requirement: map.apps 3.7.0**
+**Requirement: map.apps 3.8.0**
 
 The only step you need to do is to define the stores, which should be queryable.
 For more information have a look at
