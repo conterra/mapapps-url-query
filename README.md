@@ -16,6 +16,8 @@ https://developernetwork.conterra.de/en/documentation/mapapps/38/developers-docu
 
 All other configuration is optional.
 
+To enable notification and feature information, you have to enable the bundles ```notifier``` and ```featureinfo```.
+
 #### Configurable Components of dn_url_query
 
 ##### FeatureQueryResolver
