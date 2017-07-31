@@ -32,6 +32,9 @@
 		<plugin.jetty.version>9.4.0.v20161208</plugin.jetty.version>
 		<plugin.properties.version>1.0.0</plugin.properties.version>
 		<plugin.replacer.version>1.5.3</plugin.replacer.version>
+		<plugin.release.version>2.5.3</plugin.release.version>
+		<plugin.githubrelease.version>1.1.1</plugin.githubrelease.version>
+		<plugin.scm.version>1.9.5</plugin.scm.version>
 		
 		<!-- dojo custom build parameters -->
 		<js.build.outputPath>${project.build.directory}/${project.artifactId}/js</js.build.outputPath>
@@ -46,6 +49,11 @@
 		<!-- the default app, replaced in the *.html files to switch app names-->
 		<default.app.name>sample</default.app.name>
 		<client.config.initjs>$\{mapapps.remote.base\}/resources/jsregistry/root/ct/${mapapps.version}/dojo-init.js</client.config.initjs>
+		
+		<!-- required for release build -->
+		<scm.push>false</scm.push>
+		<scm.username>${env.USER_NAME}</scm.username>
+		<scm.password>${env.USER_PW}</scm.password>
 	</properties>
 	
 	<repositories>
@@ -350,6 +358,29 @@
 						</execution>
 					</executions>
 				</plugin>
+				<plugin>
+					<artifactId>maven-release-plugin</artifactId>
+					<version>${plugin.release.version}</version>
+					<configuration>
+						<tagNameFormat>@{project.version}</tagNameFormat>
+						<preparationGoals>clean</preparationGoals>
+						<releaseProfiles>compress,github-release</releaseProfiles>
+						<autoVersionSubmodules>true</autoVersionSubmodules>
+						<!-- for git release plugin-->
+						<arguments>-Dusername=${scm.username} -Dpassword=${scm.password}</arguments>
+						<username>${scm.username}</username>
+						<password>${scm.password}</password>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>de.jutzig</groupId>
+					<artifactId>github-release-plugin</artifactId>
+					<version>${plugin.githubrelease.version}</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-scm-plugin</artifactId>
+					<version>${plugin.scm.version}</version>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
@@ -383,8 +414,22 @@
 				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+				<artifactId>maven-release-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>de.jutzig</groupId>
+				<artifactId>github-release-plugin</artifactId>
+			</plugin>
 		</plugins>
 	</build>
+	
+	<scm>
+		<connection>scm:git:https://github.com/conterra/mapapps-url-query.git</connection>
+		<developerConnection>scm:git:https://github.com/conterra/mapapps-url-query.git</developerConnection>
+		<url>https://github.com/conterra/mapapps-url-query</url>
+		<tag>HEAD</tag>
+	</scm>
 	
 	<profiles>
 		<profile>
@@ -511,6 +556,113 @@
 									<registryEndpoint>${mapapps.remote.base}/resources/jsregistry</registryEndpoint>
 									<username>${user}</username>
 									<password>${password}</password>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>github-release</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>de.jutzig</groupId>
+						<artifactId>github-release-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>github-upload</id>
+								<phase>deploy</phase>
+								<goals>
+									<goal>release</goal>
+								</goals>
+								<configuration>
+									<tag>${project.version}</tag>
+									<artifact>${project.build.directory}/${project.artifactId}-${project.version}.jar</artifact>
+									<fileSets>
+										<fileSet>
+											<directory>${project.build.directory}</directory>
+											<includes>
+												<include>${project.artifactId}-bundle.zip</include>
+												<include>${project.artifactId}-sample-app.zip</include>
+												<!--<include>${project.artifactId}*.tar.gz</include>-->
+												<include>${project.artifactId}*.zip</include>
+											</includes>
+										</fileSet>
+									</fileSets>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>write-release-versions</id>
+			<properties>
+				<replace.source.version>${project.version}</replace.source.version>
+				<replace.target.version>${project.version}</replace.target.version>
+			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<!-- ensure correct version in the manifest.json files-->
+						<groupId>com.google.code.maven-replacer-plugin</groupId>
+						<artifactId>replacer</artifactId>
+						<executions>
+							<!-- set release version -->
+							<execution>
+								<id>Set Versions from ${replace.source.version} to ${replace.target.version}</id>
+								<phase>validate</phase>
+								<goals>
+									<goal>replace</goal>
+								</goals>
+								<configuration>
+									<basedir>${basedir}</basedir>
+									<includes>
+										<include>src/main/js/**/manifest.json</include>
+										<include>src/main/js/**/package.json</include>
+									</includes>
+									<excludes>
+										<exclude>src/main/js/**/tests/**</exclude>
+									</excludes>
+									<regex>false</regex>
+									<replacements>
+										<replacement>
+											<token>"${replace.source.version}"</token>
+											<value>"${replace.target.version}"</value>
+										</replacement>
+										<replacement>
+											<token>"~${replace.source.version}"</token>
+											<value>"~${replace.target.version}"</value>
+										</replacement>
+									</replacements>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>commit-release-versions</id>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-scm-plugin</artifactId>
+						<executions>
+							<execution>
+								<phase>validate</phase>
+								<goals>
+									<goal>checkin</goal>
+								</goals>
+								<configuration>
+									<message>[update-bundle-package-versions] from ${replace.source.version} to ${replace.target.version}</message>
+									<basedir>${basedir}/src/main/js</basedir>
+									<pushChanges>${scm.push}</pushChanges>
+									<username>${scm.username}</username>
+									<password>${scm.password}</password>
 								</configuration>
 							</execution>
 						</executions>
