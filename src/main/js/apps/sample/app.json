@@ -75,7 +75,7 @@
           "omniSearchLabelAttr": "cc",
           "omniSearchSearchAttr": "cc",
           "idProperty": "OBJECTID",
-          "url": "http://water.discomap.eea.europa.eu/arcgis/rest/services/BathingWater/BathingWater_Dyna_WM/MapServer/0",
+          "url": "https://water.discomap.eea.europa.eu/arcgis/rest/services/BathingWater/BathingWater_Dyna_WM/MapServer/0",
           "useIn": [
             "omnisearch",
             "selection"
