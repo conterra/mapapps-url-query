@@ -4,7 +4,8 @@ So you are able to query features by their metadata and show them on app startup
 
 Sample App
 ------------------
-Coming soon...
+https://www.mapapps.de/mapapps/resources/apps/downloads_url_query/index.html?FeatureQuery={%22ct_countries_1%22:{%22filter%22:{%22code%22:{%22$eqw%22:%22F*%22}}}}
+https://www.mapapps.de/mapapps/resources/apps/downloads_url_query/index.html?FeatureQuery={%22bathingwater_1%22:{%22filter%22:{%22cc%22:{%22$eqw%22:%22F*%22}}}}
 
 Installation Guide
 ------------------
