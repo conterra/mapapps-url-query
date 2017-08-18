@@ -17,7 +17,11 @@
       "featureinfo@^3.7.0",
       "agssearch@^3.7.0",
       "notifier@^3.7.0",
+      "contentviewer@^3.7.0",
       "dn_url_query"
+    ],
+    "i18n": [
+      "bundle"
     ]
   },
   "bundles": {
@@ -111,6 +115,25 @@
           "type": "Dynamic"
         }
       ]
+    },
+    "contentviewer": {
+      "StaticContent": {
+        "items": [
+          {
+            "title": "${contentviewer.urlinfo.title}",
+            "dndContainerName": "map",
+            "window": {
+              "marginBox": {
+                "w": 325,
+                "h": 200,
+                "b": 100,
+                "l": 25
+              }
+            },
+            "message": "<p>${contentviewer.urlinfo.content}</p><p><ul><li><a href=\"?FeatureQuery=%7B%22ct_countries_1%22:%7B%22filter%22:%7B%22code%22:%7B%22$eqw%22:%22F*%22%7D%7D%7D%7D\">${contentviewer.urlinfo.countryText}</a></li><li><a href=\"?FeatureQuery=%7B%22bathingwater_1%22:%7B%22filter%22:%7B%22cc%22:%7B%22$eqw%22:%22BE%22%7D%7D%7D%7D\">${contentviewer.urlinfo.waterText}</a></li></ul></p>"
+          }
+        ]
+      }
     },
     "dn_url_query": {
       "FeatureQueryResolver": {
