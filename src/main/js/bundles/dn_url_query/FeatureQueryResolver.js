@@ -337,24 +337,9 @@ define([
                         this.graphics[storeId] = graphics;
                     }, this);
 
-                    var zoom = this.propStoreZoom[storeId];
-                    if (!!zoom && zoom.activate) {
-                        this.geometries[storeId] = d_array.map(items, function (item) {
-                            return item.geometry;
-                        });
-
-                        var geometries = [];
-                        d_array.forEach(this.getRequestedStores(), function (requestStoreId) {
-                            var storedGeometries = this.geometries[requestStoreId];
-
-                            if (storedGeometries !== undefined) {
-                                geometries = this._mergeArrays(geometries, storedGeometries);
-                            }
-                        }, this);
-
-                        var overallExtent = ct_geometry.calcExtent(geometries);
-                        this._zoomTo(overallExtent, zoom.factor, zoom.defaultScale);
-                    }
+                    this.geometries[storeId] = d_array.map(items, function (item) {
+                        return item.geometry;
+                    });
                 }, this);
             }, this);
         },
@@ -426,6 +411,34 @@ define([
                     this.queryFeatures(storeId, renderer);
                 }
             }, this);
+
+            var overallZoom = {
+                factor: Number.MIN_VALUE,
+                defaultScale: 1
+            };
+            var geometries = [];
+            d_array.forEach(storeIds, function (storeId) {
+                var zoom = this.propStoreZoom[storeId];
+
+                if (!zoom || !(zoom.activate))
+                    return;
+
+                if (!(zoom.factor))
+                    overallZoom.factor = Math.max(overallZoom.factor, zoom.factor);
+
+                if (!(zoom.defaultScale))
+                    overallZoom.defaultScale = Math.max(overallZoom.defaultScale, zoom.defaultScale);
+
+                var storedGeometries = this.geometries[storeId];
+
+                if (storedGeometries !== undefined) {
+                    geometries = this._mergeArrays(geometries, storedGeometries);
+                }
+            }, this);
+            if (geometries.length > 0) {
+                var overallExtent = ct_geometry.calcExtent(geometries);
+                this._zoomTo(overallExtent, overallZoom.factor, overallZoom.defaultScale);
+            }
         },
 
         queryAll: function () {
