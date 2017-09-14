@@ -4,6 +4,7 @@ define([
     "dojo/_base/array",
     "dojo/string",
     "dojo/aspect",
+    "dojo/promise/all",
     "esri/geometry/Geometry",
     "esri/geometry/jsonUtils",
     "ct/_lang",
@@ -17,6 +18,7 @@ define([
              d_array,
              d_string,
              d_aspect,
+             promise_all,
              Geometry,
              geom_jsonUtils,
              ct_lang,
@@ -40,6 +42,7 @@ define([
             this.urlFilters = {};
             this.urlOptions = {};
 
+            this.items = {};
             this.geometries = {};
             this.graphics = {};
         },
@@ -54,6 +57,7 @@ define([
                 d_aspect.after(eraseTool, "_clearGraphics", function (originalMethod) {
                     self.getRenderer().clear();
                     self.graphics = {};
+                    self.items = {};
                     self.geometries = {};
                 });
             }
@@ -314,7 +318,7 @@ define([
             this.removeGraphics(storeId, ren);
 
             var featureQuery = this.stores[storeId].query(this.filters[storeId], this.options[storeId]);
-            ct_when(featureQuery, function (results) {
+            return ct_when(featureQuery, function (results) {
                 var items = d_array.filter(results, function (result) {
                     return !!result.geometry;
                 });
@@ -327,7 +331,7 @@ define([
                     return this._transformGeometry(item);
                 }, this);
 
-                ct_when(Promise.all(transItems), function (items) {
+                return ct_when(promise_all(transItems), function (items) {
                     d_array.forEach(items, function (item) {
                         var graphics = this.graphics[storeId] || [];
                         ct_array.arrayAdd(
@@ -337,6 +341,7 @@ define([
                         this.graphics[storeId] = graphics;
                     }, this);
 
+                    this.items[storeId] = items;
                     this.geometries[storeId] = d_array.map(items, function (item) {
                         return item.geometry;
                     });
@@ -346,6 +351,7 @@ define([
 
         queryStores: function (/**array*/ storeIds) {
             var renderer = this.getRenderer();
+            var storeQueries = [];
 
             d_array.forEach(storeIds, function (storeId) {
                 var store = this.stores[storeId];
@@ -381,64 +387,84 @@ define([
 
                     var countQuery = store.query(filter, countOptions);
 
-                    ct_when(countQuery, function (result) {
-                        var total = result["total"];
+                    storeQueries.push(
+                        ct_when(countQuery, function (result) {
+                            var total = result["total"];
 
-                        var notifiy = (
-                            this._log !== undefined
-                            && this.propStoreNotifies[storeId]
-                        );
+                            var notifiy = (
+                                this._log !== undefined
+                                && this.propStoreNotifies[storeId]
+                            );
 
-                        if (total === undefined) {
-                            if (notifiy) {
-                                this._log.error(d_string.substitute(this.i18n.notifications.totalError, {
+                            if (total === undefined) {
+                                if (notifiy) {
+                                    this._log.error(d_string.substitute(this.i18n.notifications.totalError, {
+                                        store: storeId
+                                    }));
+                                }
+
+                                return;
+                            }
+
+                            if (total <= maxCount) {
+                                return this.queryFeatures(storeId, renderer);
+                            } else if (notifiy) {
+                                this._log.warn(d_string.substitute(this.i18n.notifications.tooManyFeatures, {
                                     store: storeId
                                 }));
                             }
-
-                            return;
-                        }
-
-                        if (total <= maxCount) {
-                            this.queryFeatures(storeId, renderer);
-                        } else if (notifiy) {
-                            this._log.warn(d_string.substitute(this.i18n.notifications.tooManyFeatures, {
-                                store: storeId
-                            }));
-                        }
-                    }, this);
+                        }, this)
+                    );
                 } else {
-                    this.queryFeatures(storeId, renderer);
+                    storeQueries.push(this.queryFeatures(storeId, renderer));
                 }
             }, this);
 
-            var overallZoom = {
-                factor: Number.MIN_VALUE,
-                defaultScale: 1
-            };
-            var geometries = [];
-            d_array.forEach(storeIds, function (storeId) {
-                var zoom = this.propStoreZoom[storeId];
+            ct_when(promise_all(storeQueries), function () {
+                var overallZoom = {
+                    factor: Number.MIN_VALUE,
+                    defaultScale: 1
+                };
 
-                if (!zoom || !(zoom.activate))
-                    return;
+                var items = [];
+                var geometries = [];
+                d_array.forEach(storeIds, function (storeId) {
+                    var zoom = this.propStoreZoom[storeId];
 
-                if (!(zoom.factor))
-                    overallZoom.factor = Math.max(overallZoom.factor, zoom.factor);
+                    var storedItems = this.items[storeId];
+                    if (!!storedItems && storedItems.length > 0) {
+                        items = this._mergeArrays(items, d_array.map(storedItems, function (item) {
+                            return {
+                                item: item,
+                                storeId: storeId
+                            };
+                        }));
+                    }
 
-                if (!(zoom.defaultScale))
-                    overallZoom.defaultScale = Math.max(overallZoom.defaultScale, zoom.defaultScale);
+                    if (!zoom || !(zoom.activate))
+                        return;
 
-                var storedGeometries = this.geometries[storeId];
+                    if (!!(zoom.factor))
+                        overallZoom.factor = Math.max(overallZoom.factor, zoom.factor);
 
-                if (storedGeometries !== undefined) {
-                    geometries = this._mergeArrays(geometries, storedGeometries);
+                    if (!!(zoom.defaultScale))
+                        overallZoom.defaultScale = Math.max(overallZoom.defaultScale, zoom.defaultScale);
+
+                    geometries = this._mergeArrays(geometries, d_array.map(storedItems, function (item) {
+                        return item.geometry;
+                    }));
+                }, this);
+
+                if (geometries.length > 0) {
+                    var overallExtent = ct_geometry.calcExtent(geometries);
+                    this._zoomTo(overallExtent, overallZoom.factor, overallZoom.defaultScale);
+                }
+
+                if (!!(this._properties.autoInfo) && !!(this._contentViewer) && items.length == 1) {
+                    var item = items[0];
+                    this._contentViewer.showContentInfo(item.item, {storeId: item.storeId});
                 }
             }, this);
-            if (geometries.length > 0) {
-                var overallExtent = ct_geometry.calcExtent(geometries);
-                this._zoomTo(overallExtent, overallZoom.factor, overallZoom.defaultScale);
-            }
         },
 
         queryAll: function () {

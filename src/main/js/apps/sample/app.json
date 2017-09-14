@@ -143,6 +143,7 @@
           "factor": 1.25,
           "defaultScale": 5000
         },
+        "autoInfo": true,
         "symbols": {
           "point": {
             "type": "esriPMS",
