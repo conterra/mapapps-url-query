@@ -32,6 +32,7 @@ To enable notification and feature information, you have to enable the bundles `
           "factor": 1.25,
           "defaultScale": 5000
         },
+        "autoInfo": true,
         "symbols": {
           "point": {
             "type": "esriPMS",
@@ -67,6 +68,7 @@ To enable notification and feature information, you have to enable the bundles `
 | zoomToResults.activate         | ```true``` &#124; ```false```   | ```true```                  | Should be zoomed to all requested features?                                                                                                                                                                              |
 | zoomToResults.factor           | positive number                 | ```1```                     | A factor of the zoom extent, to get a border around all requested features                                                                                                                                               |
 | zoomToResults.defaultScale     | positive integer                | ```25000```                 | The scale used, if no extent could created from the features                                                                                                                                                             |
+| autoInfo                       | ```true``` &#124; ```false```   | ```false```                 | Should the ContentViewer opened automatically?                                                                                                                                                                           |
 | symbols.[featureType]          | JSON object                     |                             | The styling information, how to render the features.<br>Show _symbolTable in <br> https://developernetwork.conterra.de/en/documentation/mapapps/38/developers-documentation/omni-search <br> for more information        |
 | stores.[storeId].filter        | JSON object                     | ```{}```                    | Predefined filters, to limit the access to the features. <br> For more information have a look at <br> https://developernetwork.conterra.de/en/documentation/mapapps/38/developers-documentation/complex-query-dojostore |
 | stores.[storeId].operator      | ```"$and"``` &#124; ```"$or"``` | ```"$and"```                | Logical operator to combine the predefined filters with the user-defined one.                                                                                                                                            |
