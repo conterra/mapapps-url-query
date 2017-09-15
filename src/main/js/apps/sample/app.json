@@ -130,7 +130,7 @@
                 "l": 25
               }
             },
-            "message": "<p>${contentviewer.urlinfo.content}</p><p><ul><li><a href=\"?FeatureQuery=%7B%22ct_countries_1%22:%7B%22filter%22:%7B%22code%22:%7B%22$eqw%22:%22F*%22%7D%7D%7D%7D\">${contentviewer.urlinfo.countryText}</a></li><li><a href=\"?FeatureQuery=%7B%22bathingwater_1%22:%7B%22filter%22:%7B%22cc%22:%7B%22$eqw%22:%22BE%22%7D%7D%7D%7D\">${contentviewer.urlinfo.waterText}</a></li></ul></p>"
+            "message": "<p>${contentviewer.urlinfo.content}</p><p><ul><li><a href=\"?FeatureQuery=%7B%22ct_countries_1%22:%7B%22filter%22:%7B%22code%22:%7B%22$eqw%22:%22F*%22%7D%7D%7D%7D\">${contentviewer.urlinfo.countryText}</a></li><li><a href=\"?FeatureQuery=%7B%22bathingwater_1%22:%7B%22filter%22:%7B%22cc%22:%7B%22$eqw%22:%22BE%22%7D%7D%7D%7D\">${contentviewer.urlinfo.waterText}</a></li><li><a href=\"?FeatureQuery=%7B%22ct_countries_1%22%3A%7B%22filter%22%3A%7B%22code%22%3A%7B%22%24eqw%22%3A%22F%2A%22%7D%7D%7D%2C%22bathingwater_1%22%3A%7B%22filter%22%3A%7B%22cc%22%3A%7B%22%24eqw%22%3A%22BE%22%7D%7D%7D%7D\">${contentviewer.urlinfo.combinedText}</a></li><li><a href=\"?FeatureQuery=%7B%22bathingwater_1%22%3A%7B%22filter%22%3A%7B%22BWID%22%3A%7B%22%24eqw%22%3A%22BE107760%22%7D%7D%7D%7D\">${contentviewer.urlinfo.autoInfoText}</a></li></ul></p>"
           }
         ]
       }
