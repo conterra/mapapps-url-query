@@ -43,7 +43,6 @@ define([
             this.urlOptions = {};
 
             this.items = {};
-            this.geometries = {};
             this.graphics = {};
         },
         activate: function () {
@@ -58,7 +57,6 @@ define([
                     self.getRenderer().clear();
                     self.graphics = {};
                     self.items = {};
-                    self.geometries = {};
                 });
             }
 
@@ -342,9 +340,6 @@ define([
                     }, this);
 
                     this.items[storeId] = items;
-                    this.geometries[storeId] = d_array.map(items, function (item) {
-                        return item.geometry;
-                    });
                 }, this);
             }, this);
         },
