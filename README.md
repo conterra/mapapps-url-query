@@ -5,13 +5,13 @@ So you are able to query features by their metadata and show them on app startup
 Sample App
 ------------------
 * All countries, which ISO-code starts with 'F':
-https://www.mapapps.de/mapapps/resources/apps/downloads_url_query/index.html?FeatureQuery={"ct_countries_1":{"filter":{"code":{"$eqw":"F*"}}}}
+https://demos.conterra.de/mapapps/resources/apps/downloads_url_query/index.html?FeatureQuery={"ct_countries_1":{"filter":{"code":{"$eqw":"F*"}}}}
 * All 'good' water quality on 2004 in Belgium:
-https://www.mapapps.de/mapapps/resources/apps/downloads_url_query/index.html?FeatureQuery={"bathingwater_1":{"filter":{"cc":{"$eqw":"BE"}}}}
+https://demos.conterra.de/mapapps/resources/apps/downloads_url_query/index.html?FeatureQuery={"bathingwater_1":{"filter":{"cc":{"$eqw":"BE"}}}}
 * Combination of the first two examples:
-https://www.mapapps.de/mapapps/resources/apps/downloads_url_query/index.html?FeatureQuery={"ct_countries_1":{"filter":{"code":{"$eqw":"F*"}}},"bathingwater_1":{"filter":{"cc":{"$eqw":"BE"}}}}
+https://demos.conterra.de/mapapps/resources/apps/downloads_url_query/index.html?FeatureQuery={"ct_countries_1":{"filter":{"code":{"$eqw":"F*"}}},"bathingwater_1":{"filter":{"cc":{"$eqw":"BE"}}}}
 * Show only one feature, with additional information:
-https://www.mapapps.de/mapapps/resources/apps/downloads_url_query/index.html?FeatureQuery={"bathingwater_1":{"filter":{"BWID":{"$eqw":"BE107760"}}}}
+https://demos.conterra.de/mapapps/resources/apps/downloads_url_query/index.html?FeatureQuery={"bathingwater_1":{"filter":{"BWID":{"$eqw":"BE107760"}}}}
 
 Installation Guide
 ------------------
