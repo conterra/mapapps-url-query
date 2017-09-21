@@ -429,8 +429,6 @@ define([
                 var items = [];
                 var geometries = [];
                 d_array.forEach(storeIds, function (storeId) {
-                    var zoom = this.propStoreZoom[storeId];
-
                     var storedItems = this.items[storeId];
                     if (!!storedItems && storedItems.length > 0) {
                         items = this._mergeArrays(items, d_array.map(storedItems, function (item) {
@@ -441,7 +439,9 @@ define([
                         }));
                     }
 
-                    if (!zoom || !(zoom.activate))
+                    var zoom = this.propStoreZoom[storeId];
+
+                    if (!zoom || !(zoom.activate) || !storedItems)
                         return;
 
                     if (!!(zoom.factor))
