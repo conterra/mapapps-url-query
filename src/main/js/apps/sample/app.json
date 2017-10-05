@@ -18,7 +18,7 @@
       "agssearch@^3.7.0",
       "notifier@^3.7.0",
       "contentviewer@^3.7.0",
-      "dn_url_query"
+      "dn_urlquery"
     ],
     "i18n": [
       "bundle"
@@ -135,7 +135,7 @@
         ]
       }
     },
-    "dn_url_query": {
+    "dn_urlquery": {
       "FeatureQueryResolver": {
         "notifications": false,
         "zoomToResults": {

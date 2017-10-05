@@ -25,7 +25,7 @@ All other configuration is optional.
 
 To enable notification and feature information, you have to enable the bundles ```notifier``` and ```featureinfo```.
 
-#### Configurable Components of dn_url_query
+#### Configurable Components of dn_urlquery
 
 ##### FeatureQueryResolver
 ```json
