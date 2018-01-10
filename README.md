@@ -19,7 +19,7 @@ Installation Guide
 
 The only step you need to do is to define the stores, which should be queryable.
 For more information have a look at
-https://developernetwork.conterra.de/en/documentation/mapapps/38/developers-documentation/stores
+https://developernetwork.conterra.de/en/documentation/mapapps/39/developers-documentation/stores
 
 All other configuration is optional.
 
