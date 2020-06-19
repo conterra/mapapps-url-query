@@ -1,4 +1,1 @@
-define([
-    ".",
-    "./FeatureQueryResolver"
-], {});
+import "./FeatureQueryResolver"
