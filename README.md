@@ -1,6 +1,6 @@
 # URL Query
 This bundle queries features by an URL parameter.
-So you are able to query features by their metadata and show them on app startup. 
+So you are able to query features by their metadata and show them on app startup.
 
 Sample App
 ------------------
@@ -15,7 +15,7 @@ https://demos.conterra.de/mapapps/resources/apps/downloads_url_query/index.html?
 
 Installation Guide
 ------------------
-**Requirement: map.apps 3.8.0**
+**Requirement: map.apps 4.7.2**
 
 The only step you need to do is to define the stores, which should be queryable.
 For more information have a look at

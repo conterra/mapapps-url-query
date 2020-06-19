@@ -1,11 +1,13 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	
+
 	<groupId>de.conterra.devnet</groupId>
 	<artifactId>mapapps-url-query</artifactId>
-	<version>2.0.1-SNAPSHOT</version>
+	<version>3.0.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
-	
+
 	<name>URL Query</name>
 	<url>https://developernetwork.conterra.de</url>
 	<inceptionYear>2017</inceptionYear>
@@ -13,50 +15,49 @@
 		<name>con terra - Gesellschaft fuer Angewandte Informationstechnologie mbH</name>
 		<url>https://www.conterra.de</url>
 	</organization>
-	
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		
+
 		<!-- JS lib versions -->
-		<mapapps.version>3.7.0</mapapps.version>
-		
+		<mapapps.version>4.8.4</mapapps.version>
+
 		<!-- java lib versions -->
-		<ct.jsregistry.version>1.0.26</ct.jsregistry.version>
-		<ct.jsrt-test.version>1.0.7</ct.jsrt-test.version>
-		
+		<ct.jsregistry.version>1.3.7</ct.jsregistry.version>
+		<ct.jsrt-test.version>1.0.9</ct.jsrt-test.version>
+
 		<!-- plugin versions -->
-		<plugin.license.version>1.8</plugin.license.version>
-		<plugin.resources.version>3.0.2</plugin.resources.version>
-		<plugin.source.version>3.0.1</plugin.source.version>
-		<plugin.jar.version>3.0.2</plugin.jar.version>
-		<plugin.jetty.version>9.4.0.v20161208</plugin.jetty.version>
+		<plugin.license.version>2.0.0</plugin.license.version>
+		<plugin.resources.version>3.1.0</plugin.resources.version>
+		<plugin.source.version>3.2.1</plugin.source.version>
+		<plugin.jar.version>3.2.0</plugin.jar.version>
+		<plugin.jetty.version>9.4.25.v20191220</plugin.jetty.version>
 		<plugin.properties.version>1.0.0</plugin.properties.version>
 		<plugin.replacer.version>1.5.3</plugin.replacer.version>
-		<plugin.assembly.version>3.0.0</plugin.assembly.version>
+		<plugin.assembly.version>3.2.0</plugin.assembly.version>
 		<plugin.release.version>2.5.3</plugin.release.version>
-		<plugin.githubrelease.version>1.1.1</plugin.githubrelease.version>
-		<plugin.scm.version>1.9.5</plugin.scm.version>
-		
+		<plugin.githubrelease.version>1.4.0</plugin.githubrelease.version>
+		<plugin.scm.version>1.11.2</plugin.scm.version>
+
 		<!-- dojo custom build parameters -->
 		<js.build.outputPath>${project.build.directory}/${project.artifactId}/js</js.build.outputPath>
-		
-		
+
 		<!-- don't do this in production configuration! This allows to go any http traffic over the /proxy endpoint -->
 		<proxy.allowedServerUrls>
 			http,*;
 		</proxy.allowedServerUrls>
 		<proxy.allowedSSLDNs>*</proxy.allowedSSLDNs>
-		
+
 		<!-- the default app, replaced in the *.html files to switch app names-->
 		<default.app.name>sample</default.app.name>
 		<client.config.initjs>$\{mapapps.remote.base\}/resources/jsregistry/root/ct/${mapapps.version}/dojo-init.js</client.config.initjs>
-		
+
 		<!-- required for release build -->
 		<scm.push>false</scm.push>
 		<scm.username>${env.USER_NAME}</scm.username>
 		<scm.password>${env.USER_PW}</scm.password>
 	</properties>
-	
+
 	<repositories>
 		<repository>
 			<id>52n-dependencies</id>
@@ -71,7 +72,7 @@
 			<url>http://52north.org/maven/repo/releases</url>
 		</pluginRepository>
 	</pluginRepositories>
-	
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -85,6 +86,11 @@
 		</dependencies>
 	</dependencyManagement>
 	<dependencies>
+		<dependency>
+			<groupId>de.conterra.ct-proxy</groupId>
+			<artifactId>ct-proxy-servlet</artifactId>
+			<scope>test</scope>
+		</dependency>
 		<!-- proxy required if wms or other services should be loaded -->
 		<dependency>
 			<groupId>de.conterra.mapapps</groupId>
@@ -101,10 +107,11 @@
 		<dependency>
 			<groupId>de.conterra.jsrt</groupId>
 			<artifactId>ct-jsrt-test-intern-geezer</artifactId>
+			<version>${ct.jsrt-test.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	
+
 	<build>
 		<!-- set as source dir, so that you can edit it correctly in netbeans -->
 		<sourceDirectory>src/main/js</sourceDirectory>
@@ -146,7 +153,7 @@
 				</includes>
 			</testResource>
 		</testResources>
-		
+
 		<pluginManagement>
 			<plugins>
 				<plugin>
@@ -278,6 +285,7 @@
 								<value>${project.build.directory}</value>
 							</systemProperty>
 						</systemProperties>
+						<supportedPackagings>jar</supportedPackagings>
 					</configuration>
 				</plugin>
 				<plugin>
@@ -306,7 +314,7 @@
 									<replacement>
 										<!-- remove bundleLocations from app.json -->
 										<token>\s*"bundleLocations"\s*:\s*\[\s*"localbundles"\s*,\s*"bundles"\s*\]\s*,\s*</token>
-										<value />
+										<value/>
 									</replacement>
 								</replacements>
 							</configuration>
@@ -447,14 +455,14 @@
 			</plugin>
 		</plugins>
 	</build>
-	
+
 	<scm>
 		<connection>scm:git:https://github.com/conterra/mapapps-url-query.git</connection>
 		<developerConnection>scm:git:https://github.com/conterra/mapapps-url-query.git</developerConnection>
 		<url>https://github.com/conterra/mapapps-url-query</url>
 		<tag>HEAD</tag>
 	</scm>
-	
+
 	<distributionManagement>
 		<repository>
 			<id>ct-dist-releases-file</id>
@@ -467,7 +475,7 @@
 			<url>${snapshot.deployment.url}</url>
 		</snapshotRepository>
 	</distributionManagement>
-	
+
 	<profiles>
 		<profile>
 			<id>env-dev</id>
