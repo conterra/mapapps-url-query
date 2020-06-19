@@ -42,3 +42,16 @@ fabric.properties
 
 ### Custom template
 build.properties
+
+.vs/
+nbactions.xml
+nb-configuration.xml
+*.lnk
+node_modules/
+node/
+.classpath/
+.project/
+.settings/
+.vscode/settings.json
+.externalToolBuilders/
+package-lock.json
