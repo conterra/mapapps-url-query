@@ -112,7 +112,7 @@ export default class FeatureQueryResolver {
 
 	_isEmpty(item) {
 		if (!item)
-			return false;
+			return true;
 
 		// check length property
 		let length = item.length;
@@ -234,7 +234,12 @@ export default class FeatureQueryResolver {
 	}
 
 	removeGraphics(/** string */ storeId) {
-		this.graphics[storeId].forEach(graphic => {
+		let graphics = this.graphics[storeId];
+
+		if (this._isEmpty(graphics))
+			return;
+
+		graphics.forEach(graphic => {
 			graphic.remove();
 			while ((index = this.graphics[storeId].indexOf(graphic)) > -1) {
 				this.graphics[storeId].splice(index, 1);
