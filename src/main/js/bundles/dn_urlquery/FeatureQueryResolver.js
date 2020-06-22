@@ -19,7 +19,7 @@ class FeatureQueryResolver {
 		this.i18n = this._i18n.get();
 
 		/* var self = this;
-		var eraseTool = this._eraseTool;
+		let eraseTool = this._eraseTool;
 		if (!!eraseTool) {
 			d_aspect.after(eraseTool, "_clearGraphics", function (originalMethod) {
 				self.getRenderer().clear();
@@ -28,41 +28,41 @@ class FeatureQueryResolver {
 			});
 		} */
 
-		var properties = this._properties || {};
+		let properties = this._properties || {};
 
-		var notify = properties.notifications;
+		let notify = properties.notifications;
 		if (notify === undefined) {
 			notify = true
 		} else {
 			notify = !!notify
 		}
 
-		var zoom = properties.zoomToResults;
+		let zoom = properties.zoomToResults;
 		zoom['activate'] = !!zoom.activate;
 
-		var propStores = properties.stores;
-		for (var storeId in propStores) {
-			var propStore = propStores[storeId];
+		let propStores = properties.stores;
+		for (let storeId in propStores) {
+			let propStore = propStores[storeId];
 
-			var propFilter = propStore.filter;
+			let propFilter = propStore.filter;
 			if (!this._isEmpty(propFilter)) {
 				this.propFilters[storeId] = propFilter;
 				this.propOperators[storeId] = propStore.operator || "$and";
 			}
 
-			var propOptions = propStore.options;
+			let propOptions = propStore.options;
 			if (!this._isEmpty(propOptions)) {
 				this.propOptions[storeId] = propOptions;
 			}
 
-			var propStoreNotify = propStore.notifications;
+			let propStoreNotify = propStore.notifications;
 			if (propStoreNotify === undefined) {
 				this.propStoreNotifies[storeId] = notify;
 			} else {
 				this.propStoreNotifies[storeId] = !!propStoreNotify;
 			}
 
-			var propStoreZoom = propStore.zoomToResults;
+			let propStoreZoom = propStore.zoomToResults;
 			if (propStoreZoom === undefined) {
 				this.propStoreZoom[storeId] = zoom;
 			} else {
@@ -71,7 +71,7 @@ class FeatureQueryResolver {
 			}
 		}
 
-		var symbols = properties.symbols;
+		let symbols = properties.symbols;
 		if (!this._isEmpty(symbols)) {
 			this.symbols = symbols;
 			delete this.renderer;
@@ -87,11 +87,11 @@ class FeatureQueryResolver {
 	decodeURLParameter(/**JSON*/ urlObject) {
 		urlObject = urlObject || {};
 
-		var queryString = this._getPropertyIgnoreCase(urlObject, "FeatureQuery");
+		let queryString = this._getPropertyIgnoreCase(urlObject, "FeatureQuery");
 		if (queryString === undefined)
 			return;
 
-		var query = JSON.parse(queryString);
+		let query = JSON.parse(queryString);
 		for (var storeId in query) {
 			this.urlFilters[storeId] = query[storeId].filter;
 			this.urlOptions[storeId] = query[storeId].options;
@@ -101,7 +101,7 @@ class FeatureQueryResolver {
 	}
 
 	addStore(store, properties) {
-		var storeId = this.getStoreId(store, properties);
+		let storeId = this.getStoreId(store, properties);
 
 		if (storeId) {
 			this.stores[storeId] = store;
@@ -111,7 +111,7 @@ class FeatureQueryResolver {
 	}
 
 	removeStore(store, properties) {
-		var storeId = this.getStoreId(store, properties);
+		let storeId = this.getStoreId(store, properties);
 
 		if (!!storeId) {
 			this.removeGraphics(storeId);
@@ -126,7 +126,7 @@ class FeatureQueryResolver {
 		}
 
 		// check length property
-		var length = item.length;
+		let length = item.length;
 		if (length > 0) {
 			return false;
 		}
@@ -136,10 +136,10 @@ class FeatureQueryResolver {
 		 }*/
 
 		// check if it is an object and has properties
-		if (!d_lang.isObject(item)) {
+		if (!typeof item === 'object' && item !== null) {
 			return true;
 		}
-		for (var key in item) {
+		for (let key in item) {
 			if (item.hasOwnProperty(key)) {
 				return false;
 			}
@@ -153,9 +153,9 @@ class FeatureQueryResolver {
 			return object[property];
 		}
 
-		var lowerProperty = property.toLowerCase();
+		let lowerProperty = property.toLowerCase();
 
-		for (var prop in object) {
+		for (let prop in object) {
 			if (prop.toLowerCase() == lowerProperty)
 				return object[prop];
 		}
@@ -163,21 +163,19 @@ class FeatureQueryResolver {
 		return undefined;
 	}
 
-	_mergeArrays() {
-		var result = [];
+	_mergeArrays(...args) {
+		let result = [];
 
-		for (var i = 0; i < arguments.length; i++) {
-			d_array.forEach(arguments[i], function (element) {
-				ct_array.arrayAdd(result, element);
-			}, this);
+		for (let i = 0; i < args.length; i++) {
+			args[i].forEach(element => result.push(element));
 		}
 
 		return result;
 	}
 
 	_ensureTop(mapModel, graphicsNode) {
-		var pane = mapModel.getGlassPaneLayer();
-		var oldPos = pane.indexOfChild(graphicsNode);
+		let pane = mapModel.getGlassPaneLayer();
+		let oldPos = pane.indexOfChild(graphicsNode);
 		if (oldPos > 0) {
 			pane.moveChild(oldPos, 0);
 			return false;
@@ -186,13 +184,13 @@ class FeatureQueryResolver {
 	}
 
 	_getCurrentMapCRS() {
-		var mapState = this._mapState;
-		var wkid = mapState && mapState.getSpatialReference().wkid;
+		let mapState = this._mapState;
+		let wkid = mapState && mapState.getSpatialReference().wkid;
 		return wkid;
 	}
 
 	_transformGeometry(item) {
-		var geom = item.geometry;
+		let geom = item.geometry;
 		if (!geom) {
 			console.warn("OmniSearchModel: search result contains no geometry, cannot show/draw item on map!");
 		}
@@ -207,10 +205,10 @@ class FeatureQueryResolver {
 				geom = undefined;
 			}
 		}
-		var mapWkid = this._getCurrentMapCRS();
-		var coordinateTransformer = this._coordinateTransformer;
+		let mapWkid = this._getCurrentMapCRS();
+		let coordinateTransformer = this._coordinateTransformer;
 		if (mapWkid && coordinateTransformer) {
-			var extent = item.extent;
+			let extent = item.extent;
 			if (extent) {
 				item = ct_when(coordinateTransformer.transform(extent, mapWkid), function (extent) {
 					item.extent = extent;
@@ -249,18 +247,18 @@ class FeatureQueryResolver {
 	}
 
 	getRenderer() {
-		var renderer = this.renderer;
+		let renderer = this.renderer;
 
 		if (!!renderer) {
 			return renderer;
 		}
 
-		var mapModel = this._mapModel;
+		let mapModel = this._mapModel;
 
-		var renderer = this.renderer = GraphicsRenderer.createForGraphicsNode("URLQuery", mapModel);
+		renderer = this.renderer = GraphicsRenderer.createForGraphicsNode("URLQuery", mapModel);
 		if (!this._isEmpty(this.symbols)) {
-			var lookupTable = {lookupTable: this.symbols};
-			var lookupStrategy = new SymbolTableLookupStrategy(lookupTable);
+			let lookupTable = {lookupTable: this.symbols};
+			let lookupStrategy = new SymbolTableLookupStrategy(lookupTable);
 			if (this._isEmpty(lookupStrategy.lookupTable)) {
 				lookupStrategy["lookupTable"] = lookupTable;
 			}
@@ -277,42 +275,38 @@ class FeatureQueryResolver {
 	}
 
 	removeGraphics(/**string*/ storeId, renderer) {
-		var ren = renderer || this.getRenderer();
+		let ren = renderer || this.getRenderer();
 
-		d_array.forEach(this.graphics[storeId], function (graphic) {
+		this.graphics[storeId].forEach(graphic => {
 			ren.erase(graphic);
 			ct_array.arrayRemove(this.graphics[storeId], graphic);
-		}, this);
+		});
 	}
 
 	queryFeatures(/**string*/ storeId, renderer) {
-		var ren = renderer || this.getRenderer();
+		let ren = renderer || this.getRenderer();
 
 		this.removeGraphics(storeId, ren);
 
-		var featureQuery = this.stores[storeId].query(this.filters[storeId], this.options[storeId]);
+		let featureQuery = this.stores[storeId].query(this.filters[storeId], this.options[storeId]);
 		return ct_when(featureQuery, function (results) {
-			var items = d_array.filter(results, function (result) {
-				return !!result.geometry;
-			});
+			results.filter(result => !!result.geometry);
 
 			if (items.length < 1) {
 				return;
 			}
 
-			var transItems = d_array.map(items, function (item) {
-				return this._transformGeometry(item);
-			}, this);
+			items.map(item => this._transformGeometry(item));
 
 			return ct_when(promise_all(transItems), function (items) {
-				d_array.forEach(items, function (item) {
-					var graphics = this.graphics[storeId] || [];
+				items.forEach(item => {
+					let graphics = this.graphics[storeId] || [];
 					ct_array.arrayAdd(
 						graphics,
 						ren.draw(item)
 					);
 					this.graphics[storeId] = graphics;
-				}, this);
+				});
 
 				this.items[storeId] = items;
 			}, this);
@@ -320,13 +314,13 @@ class FeatureQueryResolver {
 	}
 
 	queryStores(/**array*/ storeIds) {
-		var renderer = this.getRenderer();
-		var storeQueries = [];
+		let renderer = this.getRenderer();
+		let storeQueries = [];
 
-		d_array.forEach(storeIds, function (storeId) {
-			var store = this.stores[storeId];
-			var filter = this.filters[storeId];
-			var option = this.options[storeId];
+		storeIds.forEach(storeId => {
+			let store = this.stores[storeId];
+			let filter = this.filters[storeId];
+			let option = this.options[storeId];
 
 			if (
 				store === undefined
@@ -337,7 +331,7 @@ class FeatureQueryResolver {
 
 			option = option || {};
 
-			var maxCount = option["count"];
+			let maxCount = option["count"];
 			if (maxCount === undefined) {
 				maxCount = -1;
 			} else if (maxCount == 0) {
@@ -347,7 +341,7 @@ class FeatureQueryResolver {
 			filter = filter || {};
 
 			if (maxCount > 0) {
-				var countOptions = d_lang.clone(option);
+				let countOptions = Object.assign({}, option);
 				ct_lang.merge(countOptions, {
 					count: 0
 				});
@@ -355,13 +349,13 @@ class FeatureQueryResolver {
 				// remove the sort operation, because it is not supported on counting requests
 				delete countOptions.sort;
 
-				var countQuery = store.query(filter, countOptions);
+				let countQuery = store.query(filter, countOptions);
 
 				storeQueries.push(
 					ct_when(countQuery, function (result) {
-						var total = result["total"];
+						let total = result["total"];
 
-						var notifiy = (
+						let notifiy = (
 							this._log !== undefined
 							&& this.propStoreNotifies[storeId]
 						);
@@ -388,28 +382,28 @@ class FeatureQueryResolver {
 			} else {
 				storeQueries.push(this.queryFeatures(storeId, renderer));
 			}
-		}, this);
+		});
 
 		ct_when(promise_all(storeQueries), function () {
-			var overallZoom = {
+			let overallZoom = {
 				factor: Number.MIN_VALUE,
 				defaultScale: 1
 			};
 
-			var items = [];
-			var geometries = [];
-			d_array.forEach(storeIds, function (storeId) {
-				var storedItems = this.items[storeId];
+			let items = [];
+			let geometries = [];
+			storeIds.forEach(storeId => {
+				let storedItems = this.items[storeId];
 				if (!!storedItems && storedItems.length > 0) {
-					items = this._mergeArrays(items, d_array.map(storedItems, function (item) {
+					storedItems.map(item => {
 						return {
 							item: item,
 							storeId: storeId
-						};
-					}));
+						}
+					});
 				}
 
-				var zoom = this.propStoreZoom[storeId];
+				let zoom = this.propStoreZoom[storeId];
 
 				if (!zoom || !(zoom.activate) || !storedItems)
 					return;
@@ -420,10 +414,8 @@ class FeatureQueryResolver {
 				if (!!(zoom.defaultScale))
 					overallZoom.defaultScale = Math.max(overallZoom.defaultScale, zoom.defaultScale);
 
-				geometries = this._mergeArrays(geometries, d_array.map(storedItems, function (item) {
-					return item.geometry;
-				}));
-			}, this);
+				storedItems.map(item => item.geometry);
+			});
 
 			if (geometries.length > 0) {
 				var overallExtent = ct_geometry.calcExtent(geometries);
@@ -438,11 +430,11 @@ class FeatureQueryResolver {
 	}
 
 	queryAll() {
-		var storeIds = this.getRequestedStores();
+		let storeIds = this.getRequestedStores();
 
-		d_array.forEach(storeIds, function (storeId) {
-			var propFilter = d_lang.clone(this.propFilters[storeId]);
-			var urlFilter = d_lang.clone(this.urlFilters[storeId]);
+		storeIds.forEach(storeId => {
+			let propFilter = Object.assign({}, this.propFilters[storeId]);
+			let urlFilter = Object.assign({}, this.urlFilters[storeId]);
 			if (propFilter !== undefined && urlFilter !== undefined) {
 				this.filters[storeId] = {};
 				this.filters[storeId][this.propOperators[storeId]] = [
@@ -455,15 +447,15 @@ class FeatureQueryResolver {
 				this.filters[storeId] = urlFilter || {};
 			}
 
-			var propOptions = d_lang.clone(this.propOptions[storeId]);
-			var urlOptions = d_lang.clone(this.urlOptions[storeId]);
+			let propOptions = Object.assign({}, this.propOptions[storeId]);
+			let urlOptions = Object.assign({}, this.urlOptions[storeId]);
 			if (propOptions !== undefined && urlOptions !== undefined) {
-				this.options[storeId] = d_lang.clone(propOptions);
+				this.options[storeId] = Object.assign({}, propOptions);
 				ct_lang.merge(this.options[storeId], urlOptions);
 
-				var propCount = propOptions.count;
-				var urlCount = urlOptions.count;
-				var minCount = Math.min(
+				let propCount = propOptions.count;
+				let urlCount = urlOptions.count;
+				let minCount = Math.min(
 					isNaN(propCount) ? Infinity : propCount,
 					isNaN(urlCount) ? Infinity : urlCount
 				);
@@ -481,7 +473,7 @@ class FeatureQueryResolver {
 					geometry: 1
 				}
 			});
-		}, this);
+		});
 
 		this.queryStores(storeIds);
 	}
