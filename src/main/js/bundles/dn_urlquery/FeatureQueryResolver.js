@@ -1,5 +1,6 @@
 import when from "apprt-core/when";
 import customReplacer from "apprt-core/string-replace";
+import Geometry from "esri/geometry/Geometry";
 
 export default class FeatureQueryResolver {
 	stores = {};
@@ -252,7 +253,7 @@ export default class FeatureQueryResolver {
 
 		let featureQuery = this.stores[storeId].query(this.filters[storeId], this.options[storeId]);
 		return when(featureQuery, results => {
-			results.filter(result => !!result.geometry);
+			let items = results.filter(result => !!result.geometry);
 
 			if (items.length < 1) {
 				return;
@@ -394,13 +395,13 @@ export default class FeatureQueryResolver {
 		storeIds.forEach(storeId => {
 			let propFilter = Object.assign({}, this.propFilters[storeId]);
 			let urlFilter = Object.assign({}, this.urlFilters[storeId]);
-			if (propFilter !== undefined && urlFilter !== undefined) {
+			if (!this._isEmpty(propFilter) && !this._isEmpty(urlFilter)) {
 				this.filters[storeId] = {};
 				this.filters[storeId][this.propOperators[storeId]] = [
 					propFilter,
 					urlFilter
 				];
-			} else if (propFilter !== undefined) {
+			} else if (!this._isEmpty(propFilter)) {
 				this.filters[storeId] = propFilter;
 			} else {
 				this.filters[storeId] = urlFilter || {};
@@ -427,7 +428,7 @@ export default class FeatureQueryResolver {
 			}
 
 			Object.assign(this.options[storeId], {fields: {geometry: 1}});
-		});
+		}, this);
 
 		this.queryStores(storeIds);
 	}
