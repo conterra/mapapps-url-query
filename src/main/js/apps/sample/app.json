@@ -1,207 +1,210 @@
 {
-  "properties": {
-    "amdPackages": "apprt@^3.7.0"
-  },
-  "load": {
-    "bundleLocations": [
-      "localbundles",
-      "bundles"
-    ],
-    "allowedBundles": [
-      "system@^3.7.0",
-      "templatelayout@^3.7.0",
-      "map@^3.7.0",
-      "notifier@^3.7.0",
-      "toolset@^3.7.0",
-      "parametermanager@^3.7.0",
-      "featureinfo@^3.7.0",
-      "agssearch@^3.7.0",
-      "notifier@^3.7.0",
-      "contentviewer@^3.7.0",
-      "dn_urlquery"
-    ],
-    "i18n": [
-      "bundle"
-    ]
-  },
-  "bundles": {
-    "map": {
-      "MapModelFactory": {
-        "_configData": {
-          "maps": [
-            {
-              "baseLayer": [
-                {
-                  "id": "streets",
-                  "title": "Streets",
-                  "service": "streets",
-                  "layers": [
-                    "*"
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-      },
-      "MapState": {
-        "initialExtent": {
-          "xmin": 600000,
-          "ymin": 5800000,
-          "xmax": 1700000,
-          "ymax": 7600000,
-          "spatialReference": {
-            "wkid": 3857
-          }
-        }
-      },
-      "MappingResourceRegistryFactory": {
-        "_knownServices": {
-          "services": [
-            {
-              "id": "streets",
-              "type": "AGS_TILED",
-              "url": "https://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer"
-            }
-          ]
-        }
-      }
-    },
-    "agssearch": {
-      "AutoStoreRegistration": {
-        "componentEnabled": false
-      },
-      "AGSStore": [
-        {
-          "id": "bathingwater_1",
-          "title": "Bathing water quality in Europe (Search on ArcGIS for Server Map Service)",
-          "description": "Search for bathing quality in Europe by country code",
-          "omniSearchLabelAttr": "cc",
-          "omniSearchSearchAttr": "cc",
-          "idProperty": "OBJECTID",
-          "url": "https://water.discomap.eea.europa.eu/arcgis/rest/services/BathingWater/BathingWater_Dyna_WM/MapServer/0",
-          "useIn": [
-            "omnisearch",
-            "selection"
-          ],
-          "filterOptions": {
-            "suggestContains": true
-          },
-          "omniSearchTypingDelay": 500,
-          "omniSearchPageSize": 20,
-          "omniSearchDefaultLabel": "Country code...",
-          "fetchIdProperty": true
-        },
-        {
-          "id": "ct_countries_1",
-          "title": "Countries (World)",
-          "description": "",
-          "omniSearchLabelAttr": "placename",
-          "omniSearchSearchAttr": "code",
-          "idProperty": "objectid",
-          "url": "https://services.conterra.de/arcgis/rest/services/common/grenzen/MapServer/3",
-          "useIn": [
-            "omnisearch",
-            "selection"
-          ],
-          "filterOptions": {
-            "suggestContains": true
-          },
-          "omniSearchTypingDelay": 500,
-          "omniSearchPageSize": 20,
-          "omniSearchDefaultLabel": "Country code...",
-          "fetchIdProperty": true,
-          "enablePagination": false,
-          "type": "Dynamic"
-        }
-      ]
-    },
-    "contentviewer": {
-      "StaticContent": {
-        "items": [
-          {
-            "title": "${contentviewer.urlinfo.title}",
-            "dndContainerName": "map",
-            "window": {
-              "marginBox": {
-                "w": 325,
-                "h": 210,
-                "b": 100,
-                "l": 25
-              }
-            },
-            "message": "<p>${contentviewer.urlinfo.content}</p><p><ul><li><a href=\"?FeatureQuery=%7B%22ct_countries_1%22:%7B%22filter%22:%7B%22code%22:%7B%22$eqw%22:%22F*%22%7D%7D%7D%7D\">${contentviewer.urlinfo.countryText}</a></li><li><a href=\"?FeatureQuery=%7B%22bathingwater_1%22:%7B%22filter%22:%7B%22cc%22:%7B%22$eqw%22:%22BE%22%7D%7D%7D%7D\">${contentviewer.urlinfo.waterText}</a></li><li><a href=\"?FeatureQuery=%7B%22ct_countries_1%22%3A%7B%22filter%22%3A%7B%22code%22%3A%7B%22%24eqw%22%3A%22F%2A%22%7D%7D%7D%2C%22bathingwater_1%22%3A%7B%22filter%22%3A%7B%22cc%22%3A%7B%22%24eqw%22%3A%22BE%22%7D%7D%7D%7D\">${contentviewer.urlinfo.combinedText}</a></li><li><a href=\"?FeatureQuery=%7B%22bathingwater_1%22%3A%7B%22filter%22%3A%7B%22BWID%22%3A%7B%22%24eqw%22%3A%22BE107760%22%7D%7D%7D%7D\">${contentviewer.urlinfo.autoInfoText}</a></li></ul></p>"
-          }
-        ]
-      }
-    },
-    "dn_urlquery": {
-      "FeatureQueryResolver": {
-        "notifications": false,
-        "zoomToResults": {
-          "activate": false,
-          "factor": 1.25,
-          "defaultScale": 5000
-        },
-        "autoInfo": true,
-        "symbols": {
-          "point": {
-            "type": "esriPMS",
-            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Water_drop.svg/144px-Water_drop.svg.png",
-            "width": 10,
-            "height": 16,
-            "xoffset": 0,
-            "yoffset": -8
-          },
-          "polygon": {
-            "type": "esriSFS",
-            "style": "esriSFSSolid",
-            "color": [
-              125,
-              205,
-              234,
-              100
-            ],
-            "outline": {
-              "type": "esriSLS",
-              "style": "esriSLSSolid",
-              "color": [
-                10,
-                10,
-                10,
-                255
-              ],
-              "width": 1
-            }
-          }
-        },
-        "stores": {
-          "bathingwater_1": {
-            "filter": {
-              "y2014": {
-                "$eqw": "good"
-              }
-            },
-            "options": {
-              "count": 50
-            },
-            "zoomToResults": {
-              "activate": false
-            }
-          },
-          "ct_countries_1": {
-            "options": {
-              "count": 15
-            },
-            "notifications": true,
-            "zoomToResults": {
-              "activate": true,
-              "factor": 1.15,
-              "defaultScale": 15000
-            }
-          }
-        }
-      }
-    }
-  }
+	"load": {
+		"bundleLocations": [
+			"localbundles",
+			"bundles"
+		],
+		"allowedBundles": [
+			"system@^4.6.0",
+			"splashscreen@^4.6.0",
+			"templatelayout@^4.6.0",
+			"template-seasons@^4.6.0",
+			"theme-everlasting@^4.6.0",
+			"toolset@^4.6.0",
+			"map-init@^4.6.0",
+			"agssearch@^4.6.0",
+			"sample_camera@^0.0.1",
+			"notifier@^4.7.2",
+			"parametermanager@^4.7.2",
+			"omnisearch@^4.7.2",
+			"dn_urlquery"
+		]
+	},
+	"bundles": {
+		"agssearch": {
+			"AGSStore": [
+				{
+					"id": "bathingwater_1",
+					"title": "Bathing water quality in Europe (Search on ArcGIS for Server Map Service)",
+					"description": "Search for bathing quality in Europe by country code",
+					"omniSearchLabelAttr": "cc",
+					"omniSearchSearchAttr": "cc",
+					"idProperty": "OBJECTID",
+					"url": "https://water.discomap.eea.europa.eu/arcgis/rest/services/BathingWater/BathingWater_Dyna_WM/MapServer/0",
+					"useIn": [
+						"omnisearch",
+						"selection"
+					],
+					"filterOptions": {
+						"suggestContains": true
+					},
+					"omniSearchTypingDelay": 500,
+					"omniSearchPageSize": 20,
+					"omniSearchDefaultLabel": "Country code...",
+					"fetchIdProperty": true
+				},
+				{
+					"id": "ct_countries_1",
+					"title": "Countries (World)",
+					"description": "",
+					"omniSearchLabelAttr": "placename",
+					"omniSearchSearchAttr": "code",
+					"idProperty": "objectid",
+					"url": "https://services.conterra.de/arcgis/rest/services/common/grenzen/MapServer/3",
+					"useIn": [
+						"omnisearch",
+						"selection"
+					],
+					"filterOptions": {
+						"suggestContains": true
+					},
+					"omniSearchTypingDelay": 500,
+					"omniSearchPageSize": 20,
+					"omniSearchDefaultLabel": "Country code...",
+					"fetchIdProperty": true,
+					"enablePagination": false,
+					"type": "Dynamic"
+				}
+			]
+		},
+		"dn_urlquery": {
+			"FeatureQueryResolver": {
+				"notifications": false,
+				"zoomToResults": {
+					"activate": false,
+					"factor": 1.25,
+					"defaultScale": 5000
+				},
+				"autoInfo": true,
+				"symbols": {
+					"point": {
+						"type": "esriPMS",
+						"url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Water_drop.svg/144px-Water_drop.svg.png",
+						"width": 10,
+						"height": 16,
+						"xoffset": 0,
+						"yoffset": -8
+					},
+					"polygon": {
+						"type": "esriSFS",
+						"style": "esriSFSSolid",
+						"color": [
+							125,
+							205,
+							234,
+							100
+						],
+						"outline": {
+							"type": "esriSLS",
+							"style": "esriSLSSolid",
+							"color": [
+								10,
+								10,
+								10,
+								255
+							],
+							"width": 1
+						}
+					}
+				},
+				"stores": {
+					"bathingwater_1": {
+						"filter": {
+							"y2014": {
+								"$eqw": "good"
+							}
+						},
+						"options": {
+							"count": 50
+						},
+						"zoomToResults": {
+							"activate": false
+						}
+					},
+					"ct_countries_1": {
+						"options": {
+							"count": 15
+						},
+						"notifications": true,
+						"zoomToResults": {
+							"activate": true,
+							"factor": 1.15,
+							"defaultScale": 15000
+						}
+					}
+				}
+			}
+		},
+		"map-init": {
+			"Config": {
+				"basemaps": [
+					{
+						"id": "streets",
+						"basemap": "streets",
+						"title": "Strassen",
+						"selected": true
+					},
+					{
+						"id": "satellite",
+						"basemap": "satellite",
+						"title": "Satellit"
+					},
+					{
+						"id": "hybrid",
+						"basemap": "hybrid",
+						"title": "Hybrid"
+					}
+				],
+				"map": {
+					"layers": [
+						{
+							"title": "Gemeinden",
+							"type": "AGS_FEATURE",
+							"url": "https://services.conterra.de/arcgis/rest/services/common/grenzen/FeatureServer/0",
+							"definitionExpression": "kgs8 LIKE '05515%'"
+						},
+						{
+							"title": "Kreise",
+							"type": "AGS_FEATURE",
+							"url": "https://services.conterra.de/arcgis/rest/services/common/grenzen/FeatureServer/1",
+							"definitionExpression": "land_nr = 5"
+						},
+						{
+							"title": "Bundeslaender",
+							"type": "AGS_FEATURE",
+							"url": "https://services.conterra.de/arcgis/rest/services/common/grenzen/FeatureServer/2"
+						}
+					]
+				},
+				"view": {
+					"viewmode": "2D",
+					"extent": {
+						"xmin": 600000,
+						"ymin": 5800000,
+						"xmax": 1700000,
+						"ymax": 7600000,
+						"spatialReference": 3857
+					}
+				}
+			}
+		},
+		"toolset": {
+			"ToolsetManager": {
+				"toolsets": [
+					{
+						"id": "defaultToolSet",
+						"tools": [
+							"*"
+						],
+						"registerWidget": {
+							"widgetRole": "map_topleft"
+						},
+						"container": "ignore",
+						"windowType": "container",
+						"cssClass": "muted"
+					}
+				]
+			}
+		}
+	}
 }

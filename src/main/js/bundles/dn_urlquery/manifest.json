@@ -1,86 +1,64 @@
 {
-  "Bundle-SymbolicName": "dn_urlquery",
-  "Bundle-Version": "2.0.1-SNAPSHOT",
-  "Bundle-Name": "${bundleName}",
-  "Bundle-Description": "${bundleDescription}",
-  "Bundle-Vendor": "con terra GmbH",
-  "Bundle-Category": [
-    "parameter",
-    "URL"
-  ],
-  "Require-Bundle": [
-    {
-      "name": "parametermanager",
-      "version": "^3.7.0"
-    },
-    {
-      "name": "coordinatetransformer",
-      "version": "^3.7.0",
-      "policy": "optional"
-    },
-    {
-      "name": "redlining",
-      "version": "^3.7.0",
-      "policy": "optional"
-    },
-    {
-      "name": "contentviewer",
-      "version": "^3.7.0",
-      "policy": "optional"
-    }
-  ],
-  "Product-Name": "devnet-mapapps-url-query",
-  "Components": [
-    {
-      "name": "FeatureQueryResolver",
-      "provides": "ct.api.parametermanager.Parametrizable",
-      "properties": {
-        "notifications": true,
-        "zoomToResults": {
-          "activate": true,
-          "factor": 1,
-          "defaultScale": 25000
-        },
-        "autoInfo": false,
-        "stores": []
-      },
-      "references": [
-        {
-          "name": "_log",
-          "providing": "ct.framework.api.LogService"
-        },
-        {
-          "name": "_mapModel",
-          "providing": "ct.mapping.map.MapModel"
-        },
-        {
-          "name": "_mapState",
-          "providing": "ct.mapping.map.MapState"
-        },
-        {
-          "name": "_esriMap",
-          "providing": "esri.Map"
-        },
-        {
-          "name": "_coordinateTransformer",
-          "providing": "ct.api.coordinatetransformer.CoordinateTransformer",
-          "cardinality": "0..1"
-        },
-        {
-          "name": "_eraseTool",
-          "providing": "redlining.GeometryRenderer",
-          "cardinality": "0..1"
-        },
-        {
-          "name": "_contentViewer",
-          "providing": "ct.contentviewer.ContentViewer"
-        },
-        {
-          "name": "store",
-          "providing": "ct.api.Store",
-          "cardinality": "0..n"
-        }
-      ]
-    }
-  ]
+	"name": "dn_urlquery",
+	"version": "3.0.0-SNAPSHOT",
+	"dependencies": {
+		"parametermanager": "^4.7.2",
+		"coordinatetransformer": "^4.7.2"
+	},
+	"main": "",
+	"components": [
+		{
+			"name": "FeatureQueryResolver",
+			"provides": "parametermanager.Parametrizable",
+			"properties": {
+				"notifications": true,
+				"zoomToResults": {
+					"activate": true,
+					"factor": 1,
+					"defaultScale": 25000
+				},
+				"autoInfo": false,
+				"stores": []
+			},
+			"references": [
+				{
+					"name": "_log",
+					"providing": "ct.framework.api.LogService"
+				},
+				{
+					"name": "_mapModel",
+					"providing": "ct.mapping.map.MapModel"
+				},
+				{
+					"name": "_mapState",
+					"providing": "ct.mapping.map.MapState"
+				},
+				{
+					"name": "_esriMap",
+					"providing": "esri.Map"
+				},
+				{
+					"name": "_coordinateTransformer",
+					"providing": "ct.api.coordinatetransformer.CoordinateTransformer",
+					"cardinality": "0..1"
+				},
+				{
+					"name": "_eraseTool",
+					"providing": "redlining.GeometryRenderer",
+					"cardinality": "0..1"
+				},
+				{
+					"name": "_contentViewer",
+					"providing": "ct.contentviewer.ContentViewer"
+				},
+				{
+					"name": "store",
+					"providing": "ct.api.Store",
+					"policy": "dynamic",
+					"filter": "(useIn=omnisearch)",
+					"cardinality": "0..n"
+				}
+			]
+		}
+	]
 }
