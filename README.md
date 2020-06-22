@@ -7,9 +7,9 @@ Sample App
 * All countries, which ISO-code starts with 'F':
 https://demos.conterra.de/mapapps/resources/apps/downloads_url_query/index.html?FeatureQuery={"ct_countries_1":{"filter":{"code":{"$eqw":"F*"}}}}
 * All 'good' water quality on 2004 in Belgium:
-https://demos.conterra.de/mapapps/resources/apps/downloads_url_query/index.html?FeatureQuery={"bathingwater_1":{"filter":{"cc":{"$eqw":"BE"}}}}
+https://demos.conterra.de/mapapps/resources/apps/downloads_url_query/index.html?FeatureQuery={"bathingwater_1":{"filter":{"countryCode":{"$eqw":"BE"}}}}
 * Combination of the first two examples:
-https://demos.conterra.de/mapapps/resources/apps/downloads_url_query/index.html?FeatureQuery={"ct_countries_1":{"filter":{"code":{"$eqw":"F*"}}},"bathingwater_1":{"filter":{"cc":{"$eqw":"BE"}}}}
+https://demos.conterra.de/mapapps/resources/apps/downloads_url_query/index.html?FeatureQuery={"ct_countries_1":{"filter":{"code":{"$eqw":"F*"}}},"bathingwater_1":{"filter":{"countryCode":{"$eqw":"BE"}}}}
 * Show only one feature, with additional information:
 https://demos.conterra.de/mapapps/resources/apps/downloads_url_query/index.html?FeatureQuery={"bathingwater_1":{"filter":{"BWID":{"$eqw":"BE107760"}}}}
 

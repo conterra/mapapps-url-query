@@ -16,7 +16,8 @@
 			"notifier@^4.7.2",
 			"parametermanager@^4.7.2",
 			"omnisearch@^4.7.2",
-			"dn_urlquery"
+			"dn_urlquery",
+			"console"
 		]
 	},
 	"bundles": {
@@ -26,8 +27,8 @@
 					"id": "bathingwater_1",
 					"title": "Bathing water quality in Europe (Search on ArcGIS for Server Map Service)",
 					"description": "Search for bathing quality in Europe by country code",
-					"omniSearchLabelAttr": "cc",
-					"omniSearchSearchAttr": "cc",
+					"omniSearchLabelAttr": "countryCode",
+					"omniSearchSearchAttr": "countryCode",
 					"idProperty": "OBJECTID",
 					"url": "https://water.discomap.eea.europa.eu/arcgis/rest/services/BathingWater/BathingWater_Dyna_WM/MapServer/0",
 					"useIn": [
@@ -109,7 +110,7 @@
 				"stores": {
 					"bathingwater_1": {
 						"filter": {
-							"y2014": {
+							"qualityStatus_minus5": {
 								"$eqw": "good"
 							}
 						},

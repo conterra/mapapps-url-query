@@ -69,6 +69,8 @@ export default class FeatureQueryResolver {
 			this.symbols = symbols;
 		}
 
+		this.animationOptions = properties.animationOptions;
+
 		this.queryAll();
 	}
 
@@ -84,7 +86,7 @@ export default class FeatureQueryResolver {
 			return;
 
 		let query = JSON.parse(queryString);
-		for (var storeId in query) {
+		for (let storeId in query) {
 			this.urlFilters[storeId] = query[storeId].filter;
 			this.urlOptions[storeId] = query[storeId].options;
 		}
@@ -213,11 +215,32 @@ export default class FeatureQueryResolver {
 		return item;
 	}
 
+	_calcExtent(/** Array */ geometries) {
+		if (geometries.length < 1)
+			return;
+
+		let overallExtent;
+
+		geometries.forEach(geometry => {
+			if (!this._isEmpty(overallExtent))
+				overallExtent = overallExtent.union(geometry.get("extent"));
+			else
+				overallExtent = geometry.get("extent");
+		});
+
+		return overallExtent;
+	}
+
 	_zoomTo(extent, factor, defaultScale) {
-		if (extent.getHeight() !== 0 || extent.getWidth() !== 0) {
-			this._mapState.setExtent(extent.expand(factor));
+		let view = this._mapWidget.get("view");
+
+		if (extent.height !== 0 || extent.width !== 0) {
+			view.goTo(extent.expand(factor), this.animationOptions);
 		} else {
-			this._mapState.centerAndZoomToScale(extent.getCenter(), defaultScale);
+			view.goTo({
+				target: extent.get("center"),
+				scale: defaultScale
+			}, this.animationOptions);
 		}
 	}
 
@@ -374,16 +397,16 @@ export default class FeatureQueryResolver {
 				if (!!(zoom.defaultScale))
 					overallZoom.defaultScale = Math.max(overallZoom.defaultScale, zoom.defaultScale);
 
-				storedItems.map(item => item.geometry);
+				geometries = storedItems.map(item => item.geometry);
 			});
 
 			if (geometries.length > 0) {
-				var overallExtent = ct_geometry.calcExtent(geometries);
+				let overallExtent = this._calcExtent(geometries);
 				this._zoomTo(overallExtent, overallZoom.factor, overallZoom.defaultScale);
 			}
 
 			if (!!(this._properties.autoInfo) && !!(this._contentViewer) && items.length == 1) {
-				var item = items[0];
+				let item = items[0];
 				this._contentViewer.showContentInfo(item.item, {storeId: item.storeId});
 			}
 		}, this);
