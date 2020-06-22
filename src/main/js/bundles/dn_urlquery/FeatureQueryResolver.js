@@ -18,8 +18,7 @@ class FeatureQueryResolver {
 	activate() {
 		this.i18n = this._i18n.get();
 
-		/* var self = this;
-		let eraseTool = this._eraseTool;
+		/* let eraseTool = this._eraseTool;
 		if (!!eraseTool) {
 			d_aspect.after(eraseTool, "_clearGraphics", function (originalMethod) {
 				self.getRenderer().clear();
@@ -66,8 +65,7 @@ class FeatureQueryResolver {
 			if (propStoreZoom === undefined) {
 				this.propStoreZoom[storeId] = zoom;
 			} else {
-				this.propStoreZoom[storeId] = {};
-				ct_lang.merge(this.propStoreZoom[storeId], zoom, propStoreZoom);
+				this.propStoreZoom[storeId] = Object.assign({}, this.propStoreZoom[storeId], zoom, propStoreZoom);
 			}
 		}
 
@@ -120,20 +118,13 @@ class FeatureQueryResolver {
 	}
 
 	_isEmpty(item) {
-		// check default undefined
-		if (ct_lang.isEmpty(item)) {
-			return true;
-		}
-
 		// check length property
 		let length = item.length;
 		if (length > 0) {
 			return false;
+		} else if (length === 0) {
+			return true;
 		}
-		// already done by ct_lang.isEmpty
-		/*if (length === 0) {
-		 return true;
-		 }*/
 
 		// check if it is an object and has properties
 		if (!typeof item === 'object' && item !== null) {
@@ -279,7 +270,9 @@ class FeatureQueryResolver {
 
 		this.graphics[storeId].forEach(graphic => {
 			ren.erase(graphic);
-			ct_array.arrayRemove(this.graphics[storeId], graphic);
+			while ((index = this.graphics[storeId].indexOf(graphic)) > -1) {
+				this.graphics[storeId].splice(index, 1);
+			}
 		});
 	}
 
@@ -301,10 +294,7 @@ class FeatureQueryResolver {
 			return ct_when(promise_all(transItems), function (items) {
 				items.forEach(item => {
 					let graphics = this.graphics[storeId] || [];
-					ct_array.arrayAdd(
-						graphics,
-						ren.draw(item)
-					);
+					graphics.push(ren.draw(item));
 					this.graphics[storeId] = graphics;
 				});
 
@@ -341,10 +331,7 @@ class FeatureQueryResolver {
 			filter = filter || {};
 
 			if (maxCount > 0) {
-				let countOptions = Object.assign({}, option);
-				ct_lang.merge(countOptions, {
-					count: 0
-				});
+				let countOptions = Object.assign({}, option, {count: 0});
 
 				// remove the sort operation, because it is not supported on counting requests
 				delete countOptions.sort;
@@ -450,8 +437,7 @@ class FeatureQueryResolver {
 			let propOptions = Object.assign({}, this.propOptions[storeId]);
 			let urlOptions = Object.assign({}, this.urlOptions[storeId]);
 			if (propOptions !== undefined && urlOptions !== undefined) {
-				this.options[storeId] = Object.assign({}, propOptions);
-				ct_lang.merge(this.options[storeId], urlOptions);
+				this.options[storeId] = Object.assign({}, propOptions, urlOptions);
 
 				let propCount = propOptions.count;
 				let urlCount = urlOptions.count;
@@ -468,11 +454,7 @@ class FeatureQueryResolver {
 				this.options[storeId] = urlOptions || {};
 			}
 
-			ct_lang.merge(this.options[storeId], {
-				fields: {
-					geometry: 1
-				}
-			});
+			Object.assign(this.options[storeId], {fields: {geometry: 1}});
 		});
 
 		this.queryStores(storeIds);
