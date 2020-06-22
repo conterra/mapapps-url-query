@@ -66,12 +66,9 @@ export default class FeatureQueryResolver {
 		let symbols = properties.symbols;
 		if (!this._isEmpty(symbols)) {
 			this.symbols = symbols;
-			delete this.renderer;
 		}
 
 		this.queryAll();
-
-		console.log("CHWE: stores: " + this.stores);
 	}
 
 	/**
@@ -95,8 +92,6 @@ export default class FeatureQueryResolver {
 	}
 
 	addStore(store, properties) {
-		console.log("CHWE: add store");
-
 		let storeId = this.getStoreId(store, properties);
 
 		if (storeId) {
@@ -116,6 +111,9 @@ export default class FeatureQueryResolver {
 	}
 
 	_isEmpty(item) {
+		if (!item)
+			return false;
+
 		// check length property
 		let length = item.length;
 		if (length > 0) {
@@ -156,7 +154,7 @@ export default class FeatureQueryResolver {
 		let result = [];
 
 		args.forEach(argument => {
-			args[i].forEach(element => result.push(element));
+			argument.forEach(element => result.push(element));
 		});
 
 		return result;
@@ -235,34 +233,6 @@ export default class FeatureQueryResolver {
 		return properties.id || properties.storeId || store.id || store.storeId;
 	}
 
-	getRenderer() {
-		let renderer = this.renderer;
-
-		if (!!renderer) {
-			return renderer;
-		}
-
-		let mapModel = this._mapModel;
-
-		renderer = this.renderer = GraphicsRenderer.createForGraphicsNode("URLQuery", mapModel);
-		if (!this._isEmpty(this.symbols)) {
-			let lookupTable = {lookupTable: this.symbols};
-			let lookupStrategy = new SymbolTableLookupStrategy(lookupTable);
-			if (this._isEmpty(lookupStrategy.lookupTable)) {
-				lookupStrategy["lookupTable"] = lookupTable;
-			}
-			renderer._setSymbolLookupStrategy(lookupStrategy);
-		}
-
-		if (renderer.hasNodeCreated || !this._ensureTop(mapModel, renderer.graphicsNode)) {
-			mapModel.fireModelStructureChanged({
-				source: this
-			});
-		}
-
-		return renderer;
-	}
-
 	removeGraphics(/** string */ storeId) {
 		this.graphics[storeId].forEach(graphic => {
 			graphic.remove();
@@ -272,9 +242,7 @@ export default class FeatureQueryResolver {
 		});
 	}
 
-	queryFeatures(/**string*/ storeId, renderer) {
-		let ren = renderer || this.getRenderer();
-
+	queryFeatures(/**string*/ storeId) {
 		this.removeGraphics(storeId);
 
 		let featureQuery = this.stores[storeId].query(this.filters[storeId], this.options[storeId]);
@@ -285,9 +253,9 @@ export default class FeatureQueryResolver {
 				return;
 			}
 
-			items.map(item => this._transformGeometry(item));
+			let transItems = items.map(item => this._transformGeometry(item));
 
-			return when(promise_all(transItems)).then(items => {
+			return when(Promise.all(transItems)).then(items => {
 				items.forEach(item => {
 					let graphics = this.graphics[storeId] || [];
 					graphics.push(this._highlighter.highlight(item));
@@ -300,7 +268,6 @@ export default class FeatureQueryResolver {
 	}
 
 	queryStores(/**array*/ storeIds) {
-		let renderer = this.getRenderer();
 		let storeQueries = [];
 
 		storeIds.forEach(storeId => {
@@ -358,7 +325,7 @@ export default class FeatureQueryResolver {
 						}
 
 						if (total <= maxCount) {
-							return this.queryFeatures(storeId, renderer);
+							return this.queryFeatures(storeId);
 						} else if (notifiy) {
 							replace(this.i18n.notification.tooManyFeatures, {
 								store: storeId
@@ -367,11 +334,11 @@ export default class FeatureQueryResolver {
 					}, this)
 				);
 			} else {
-				storeQueries.push(this.queryFeatures(storeId, renderer));
+				storeQueries.push(this.queryFeatures(storeId));
 			}
 		});
 
-		when(promise_all(storeQueries)).then(() => {
+		when(Promise.all(storeQueries)).then(() => {
 			let overallZoom = {
 				factor: Number.MIN_VALUE,
 				defaultScale: 1
