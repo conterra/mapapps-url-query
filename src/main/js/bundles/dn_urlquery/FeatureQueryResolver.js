@@ -1,4 +1,7 @@
-class FeatureQueryResolver {
+import when from "apprt-core/when";
+import customReplacer from "apprt-core/string-replace";
+
+export default class FeatureQueryResolver {
 	stores = {};
 	filters = {};
 	options = {};
@@ -17,15 +20,6 @@ class FeatureQueryResolver {
 
 	activate() {
 		this.i18n = this._i18n.get();
-
-		/* let eraseTool = this._eraseTool;
-		if (!!eraseTool) {
-			d_aspect.after(eraseTool, "_clearGraphics", function (originalMethod) {
-				self.getRenderer().clear();
-				self.graphics = {};
-				self.items = {};
-			});
-		} */
 
 		let properties = this._properties || {};
 
@@ -76,6 +70,8 @@ class FeatureQueryResolver {
 		}
 
 		this.queryAll();
+
+		console.log("CHWE: stores: " + this.stores);
 	}
 
 	/**
@@ -99,6 +95,8 @@ class FeatureQueryResolver {
 	}
 
 	addStore(store, properties) {
+		console.log("CHWE: add store");
+
 		let storeId = this.getStoreId(store, properties);
 
 		if (storeId) {
@@ -157,9 +155,9 @@ class FeatureQueryResolver {
 	_mergeArrays(...args) {
 		let result = [];
 
-		for (let i = 0; i < args.length; i++) {
+		args.forEach(argument => {
 			args[i].forEach(element => result.push(element));
-		}
+		});
 
 		return result;
 	}
@@ -201,16 +199,16 @@ class FeatureQueryResolver {
 		if (mapWkid && coordinateTransformer) {
 			let extent = item.extent;
 			if (extent) {
-				item = ct_when(coordinateTransformer.transform(extent, mapWkid), function (extent) {
+				item = when(coordinateTransformer.transform(extent, mapWkid)).then(extent => {
 					item.extent = extent;
 					return item;
-				}, this);
+				});
 			}
 			if (geom) {
-				item = ct_when(coordinateTransformer.transform(geom, mapWkid), function (geometry) {
+				item = when(coordinateTransformer.transform(geom, mapWkid)).then(geometry => {
 					item.geometry = geometry;
 					return item;
-				}, this);
+				});
 			}
 		}
 		return item;
@@ -265,11 +263,9 @@ class FeatureQueryResolver {
 		return renderer;
 	}
 
-	removeGraphics(/**string*/ storeId, renderer) {
-		let ren = renderer || this.getRenderer();
-
+	removeGraphics(/** string */ storeId) {
 		this.graphics[storeId].forEach(graphic => {
-			ren.erase(graphic);
+			graphic.remove();
 			while ((index = this.graphics[storeId].indexOf(graphic)) > -1) {
 				this.graphics[storeId].splice(index, 1);
 			}
@@ -279,10 +275,10 @@ class FeatureQueryResolver {
 	queryFeatures(/**string*/ storeId, renderer) {
 		let ren = renderer || this.getRenderer();
 
-		this.removeGraphics(storeId, ren);
+		this.removeGraphics(storeId);
 
 		let featureQuery = this.stores[storeId].query(this.filters[storeId], this.options[storeId]);
-		return ct_when(featureQuery, function (results) {
+		return when(featureQuery, results => {
 			results.filter(result => !!result.geometry);
 
 			if (items.length < 1) {
@@ -291,16 +287,16 @@ class FeatureQueryResolver {
 
 			items.map(item => this._transformGeometry(item));
 
-			return ct_when(promise_all(transItems), function (items) {
+			return when(promise_all(transItems)).then(items => {
 				items.forEach(item => {
 					let graphics = this.graphics[storeId] || [];
-					graphics.push(ren.draw(item));
+					graphics.push(this._highlighter.highlight(item));
 					this.graphics[storeId] = graphics;
 				});
 
 				this.items[storeId] = items;
 			}, this);
-		}, this);
+		});
 	}
 
 	queryStores(/**array*/ storeIds) {
@@ -339,7 +335,7 @@ class FeatureQueryResolver {
 				let countQuery = store.query(filter, countOptions);
 
 				storeQueries.push(
-					ct_when(countQuery, function (result) {
+					when(countQuery).then(result => {
 						let total = result["total"];
 
 						let notifiy = (
@@ -347,11 +343,15 @@ class FeatureQueryResolver {
 							&& this.propStoreNotifies[storeId]
 						);
 
+						const replace = customReplacer({
+							valueNotFound: ""
+						});
+
 						if (total === undefined) {
 							if (notifiy) {
-								this._log.error(d_string.substitute(this.i18n.notifications.totalError, {
+								replace(this.i18n.notification.totalError, {
 									store: storeId
-								}));
+								});
 							}
 
 							return;
@@ -360,9 +360,9 @@ class FeatureQueryResolver {
 						if (total <= maxCount) {
 							return this.queryFeatures(storeId, renderer);
 						} else if (notifiy) {
-							this._log.warn(d_string.substitute(this.i18n.notifications.tooManyFeatures, {
+							replace(this.i18n.notification.tooManyFeatures, {
 								store: storeId
-							}));
+							});
 						}
 					}, this)
 				);
@@ -371,7 +371,7 @@ class FeatureQueryResolver {
 			}
 		});
 
-		ct_when(promise_all(storeQueries), function () {
+		when(promise_all(storeQueries)).then(() => {
 			let overallZoom = {
 				factor: Number.MIN_VALUE,
 				defaultScale: 1
