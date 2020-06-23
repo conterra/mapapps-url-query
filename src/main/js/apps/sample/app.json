@@ -5,16 +5,16 @@
 			"bundles"
 		],
 		"allowedBundles": [
-			"system@^4.6.0",
-			"splashscreen@^4.6.0",
-			"templatelayout@^4.6.0",
-			"template-seasons@^4.6.0",
-			"theme-everlasting@^4.6.0",
-			"toolset@^4.6.0",
-			"map-init@^4.6.0",
-			"agssearch@^4.6.0",
-			"notifier@^4.7.2",
-			"parametermanager@^4.7.2",
+			"system@^4.8.0",
+			"splashscreen@^4.8.0",
+			"templatelayout@^4.8.0",
+			"template-seasons@^4.8.0",
+			"theme-everlasting@^4.8.0",
+			"toolset@^4.8.0",
+			"map-init@^4.8.0",
+			"agssearch@^4.8.0",
+			"notifier@^4.8.0",
+			"parametermanager@^4.8.0",
 			"dn_urlquery"
 		]
 	},

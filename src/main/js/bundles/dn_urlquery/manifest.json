@@ -2,10 +2,10 @@
 	"name": "dn_urlquery",
 	"version": "3.0.0-SNAPSHOT",
 	"dependencies": {
-		"map-widget": "^4.7.2",
-		"parametermanager": "^4.7.2",
-		"highlights": "^4.7.2",
-		"coordinatetransformer": "^4.7.2"
+		"map-widget": "^4.8.0",
+		"parametermanager": "^4.8.0",
+		"highlights": "^4.8.0",
+		"coordinatetransformer": "^4.8.0"
 	},
 	"main": "",
 	"components": [

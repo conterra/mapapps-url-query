@@ -15,7 +15,7 @@ https://demos.conterra.de/mapapps/resources/apps/downloads_url_query/index.html?
 
 Installation Guide
 ------------------
-**Requirement: map.apps 4.7.2**
+**Requirement: map.apps 4.8.0**
 
 The only step you need to do is to define the stores, which should be queryable.
 For more information have a look at
