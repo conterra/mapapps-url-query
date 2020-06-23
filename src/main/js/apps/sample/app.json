@@ -15,9 +15,7 @@
 			"agssearch@^4.6.0",
 			"notifier@^4.7.2",
 			"parametermanager@^4.7.2",
-			"omnisearch@^4.7.2",
-			"dn_urlquery",
-			"console"
+			"dn_urlquery"
 		]
 	},
 	"bundles": {
@@ -130,6 +128,24 @@
 							"activate": true,
 							"factor": 1.15,
 							"defaultScale": 15000
+						},
+						"popupTemplate": {
+							"title": "{placename}",
+							"content": [
+								{
+									"type": "fields",
+									"fieldInfos": [
+										{
+											"fieldName": "placename",
+											"label": "Name"
+										},
+										{
+											"fieldName": "code",
+											"label": "Code"
+										}
+									]
+								}
+							]
 						}
 					}
 				}

@@ -14,6 +14,7 @@ export default class FeatureQueryResolver {
 	propStoreNotifies = {};
 	propStoreZoom = {};
 	propStoreSymbols = {};
+	propStorePopupTemplate = {};
 
 	urlFilters = {};
 	urlOptions = {};
@@ -68,13 +69,13 @@ export default class FeatureQueryResolver {
 			let propStoreSymbols = propStore.symbols;
 			if (!this._isEmpty(propStoreSymbols))
 				this.propStoreSymbols[storeId] = propStoreSymbols;
+
+			let propStorePopupTemplate = propStore.popupTemplate;
+			if (!this._isEmpty(propStorePopupTemplate))
+				this.propStorePopupTemplate[storeId] = propStorePopupTemplate;
 		}
 
-		let symbols = properties.symbols;
-		if (!this._isEmpty(symbols))
-			this.symbols = symbols;
-		else
-			this.symbols = {};
+		this.symbols = properties.symbols || {};
 
 		this.animationOptions = properties.animationOptions;
 
@@ -311,6 +312,8 @@ export default class FeatureQueryResolver {
 				symbols[geoType] = this.symbols[geoType]
 		}, this);
 
+		let popupTemplate = this.propStorePopupTemplate[storeId];
+
 		let featureQuery = this.stores[storeId].query(this.filters[storeId], this.options[storeId]);
 		return when(featureQuery, results => {
 			let items = results.filter(result => !!result.geometry);
@@ -327,7 +330,13 @@ export default class FeatureQueryResolver {
 
 				return item;
 			}, this);
-			let transItems = symbolItems.map(item => this._transformGeometry(item));
+			let popupItems = symbolItems.map(item => {
+				if (!this._isEmpty(popupTemplate))
+					item.popupTemplate = popupTemplate;
+
+				return item;
+			}, this);
+			let transItems = popupItems.map(item => this._transformGeometry(item));
 
 			return when(Promise.all(transItems)).then(items => {
 				items.forEach(item => {
