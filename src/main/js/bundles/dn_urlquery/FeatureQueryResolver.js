@@ -71,9 +71,10 @@ export default class FeatureQueryResolver {
 		}
 
 		let symbols = properties.symbols;
-		if (!this._isEmpty(symbols)) {
+		if (!this._isEmpty(symbols))
 			this.symbols = symbols;
-		}
+		else
+			this.symbols = {};
 
 		this.animationOptions = properties.animationOptions;
 
@@ -319,9 +320,13 @@ export default class FeatureQueryResolver {
 			}
 
 			let symbolItems = items.map(item => {
-				item.symbol = symbols[item.geometry.type];
+				let symbol = symbols[item.geometry.type];
+
+				if (!this._isEmpty(symbol))
+					item.symbol = symbols[item.geometry.type];
+
 				return item;
-			});
+			}, this);
 			let transItems = symbolItems.map(item => this._transformGeometry(item));
 
 			return when(Promise.all(transItems)).then(items => {
