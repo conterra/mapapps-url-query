@@ -458,11 +458,6 @@ export default class FeatureQueryResolver {
 				let overallExtent = this._calcExtent(geometries);
 				this._zoomTo(overallExtent, overallZoom.factor, overallZoom.defaultScale);
 			}
-
-			if (!!(this._properties.autoInfo) && !!(this._contentViewer) && items.length == 1) {
-				let item = items[0];
-				this._contentViewer.showContentInfo(item.item, {storeId: item.storeId});
-			}
 		}, this);
 	}
 
