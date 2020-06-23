@@ -6,7 +6,7 @@ Sample App
 ------------------
 * All countries, which ISO-code starts with 'F':
 https://demos.conterra.de/mapapps/resources/apps/downloads_url_query/index.html?FeatureQuery={"ct_countries_1":{"filter":{"code":{"$eqw":"F*"}}}}
-* All 'good' water quality on 2004 in Belgium:
+* All 'Good' water quality on 2014 in Belgium:
 https://demos.conterra.de/mapapps/resources/apps/downloads_url_query/index.html?FeatureQuery={"bathingwater_1":{"filter":{"countryCode":{"$eqw":"BE"}}}}
 * Combination of the first two examples:
 https://demos.conterra.de/mapapps/resources/apps/downloads_url_query/index.html?FeatureQuery={"ct_countries_1":{"filter":{"code":{"$eqw":"F*"}}},"bathingwater_1":{"filter":{"countryCode":{"$eqw":"BE"}}}}
@@ -50,8 +50,8 @@ To enable notification and feature information, you have to enable the bundles `
         "stores": {
           "bathingwater_1": {
             "filter": {
-              "y2014": {
-                "$eqw": "good"
+              "qualityStatus_minus5": {
+                "$eqw": "Good"
               }
             },
             "options": {

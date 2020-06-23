@@ -30,7 +30,7 @@
 					"omniSearchLabelAttr": "countryCode",
 					"omniSearchSearchAttr": "countryCode",
 					"idProperty": "OBJECTID",
-					"url": "https://water.discomap.eea.europa.eu/arcgis/rest/services/BathingWater/BathingWater_Dyna_WM/MapServer/0",
+					"url": "https://water.discomap.eea.europa.eu/arcgis/rest/services/BathingWater/BathingWater_Dyna_WM/MapServer/3",
 					"useIn": [
 						"omnisearch",
 						"selection"
@@ -111,7 +111,7 @@
 					"bathingwater_1": {
 						"filter": {
 							"qualityStatus_minus5": {
-								"$eqw": "good"
+								"$eqw": "Good"
 							}
 						},
 						"options": {
