@@ -1,6 +1,7 @@
 import when from "apprt-core/when";
 import customReplacer from "apprt-core/string-replace";
 import Geometry from "esri/geometry/Geometry";
+import Extent from "esri/geometry/Extent";
 
 export default class FeatureQueryResolver {
 	stores = {};
@@ -222,10 +223,17 @@ export default class FeatureQueryResolver {
 		let overallExtent;
 
 		geometries.forEach(geometry => {
+			let extent = geometry.get("extent");
+			if (!extent) {
+				let x = geometry.get("x");
+				let y = geometry.get("y");
+				extent = new Extent(x, y, x, y, geometry.get("spatialReference"));
+			}
+
 			if (!this._isEmpty(overallExtent))
-				overallExtent = overallExtent.union(geometry.get("extent"));
+				overallExtent = overallExtent.union(extent);
 			else
-				overallExtent = geometry.get("extent");
+				overallExtent = extent;
 		});
 
 		return overallExtent;
@@ -240,14 +248,15 @@ export default class FeatureQueryResolver {
 			if (!!view) {
 				this.handle.remove();
 
-				if (extent.height !== 0 || extent.width !== 0) {
-					view.goTo(extent.expand(factor), this.animationOptions);
-				} else {
-					view.goTo({
-						target: extent.get("center"),
-						scale: defaultScale
-					}, this.animationOptions);
-				}
+				if (!!extent)
+					if (extent.height !== 0 || extent.width !== 0) {
+						view.goTo(extent.expand(factor), this.animationOptions);
+					} else {
+						view.goTo({
+							target: extent.get("center"),
+							scale: defaultScale
+						}, this.animationOptions);
+					}
 			}
 		});
 	}
