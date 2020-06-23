@@ -232,16 +232,24 @@ export default class FeatureQueryResolver {
 	}
 
 	_zoomTo(extent, factor, defaultScale) {
-		let view = this._mapWidget.get("view");
+		if (!!this.handle)
+			this.handle.remove();
 
-		if (extent.height !== 0 || extent.width !== 0) {
-			view.goTo(extent.expand(factor), this.animationOptions);
-		} else {
-			view.goTo({
-				target: extent.get("center"),
-				scale: defaultScale
-			}, this.animationOptions);
-		}
+		this.handle = this._mapWidget.watch("view", event => {
+			const view = event.value;
+			if (!!view) {
+				this.handle.remove();
+
+				if (extent.height !== 0 || extent.width !== 0) {
+					view.goTo(extent.expand(factor), this.animationOptions);
+				} else {
+					view.goTo({
+						target: extent.get("center"),
+						scale: defaultScale
+					}, this.animationOptions);
+				}
+			}
+		});
 	}
 
 	getRequestedStores() {
