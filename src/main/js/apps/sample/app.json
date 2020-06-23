@@ -78,30 +78,30 @@
 				"autoInfo": true,
 				"symbols": {
 					"point": {
-						"type": "esriPMS",
-						"url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Water_drop.svg/144px-Water_drop.svg.png",
+						"type": "picture-marker",
+						"url": "https://upload.wikimedia.org/wikipedia/commons/f/ff/Water_drop.svg",
 						"width": 10,
 						"height": 16,
 						"xoffset": 0,
 						"yoffset": -8
 					},
 					"polygon": {
-						"type": "esriSFS",
-						"style": "esriSFSSolid",
+						"type": "simple-fill",
+						"style": "solid",
 						"color": [
 							125,
 							205,
 							234,
-							100
+							0.39
 						],
 						"outline": {
-							"type": "esriSLS",
-							"style": "esriSLSSolid",
+							"type": "simple-line",
+							"style": "solid",
 							"color": [
 								10,
 								10,
 								10,
-								255
+								1
 							],
 							"width": 1
 						}

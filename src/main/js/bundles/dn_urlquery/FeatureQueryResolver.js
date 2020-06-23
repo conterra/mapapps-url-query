@@ -13,6 +13,7 @@ export default class FeatureQueryResolver {
 	propOperators = {};
 	propStoreNotifies = {};
 	propStoreZoom = {};
+	propStoreSymbols = {};
 
 	urlFilters = {};
 	urlOptions = {};
@@ -63,6 +64,10 @@ export default class FeatureQueryResolver {
 			} else {
 				this.propStoreZoom[storeId] = Object.assign({}, this.propStoreZoom[storeId], zoom, propStoreZoom);
 			}
+
+			let propStoreSymbols = propStore.symbols;
+			if (!this._isEmpty(propStoreSymbols))
+				this.propStoreSymbols[storeId] = propStoreSymbols;
 		}
 
 		let symbols = properties.symbols;
@@ -291,6 +296,20 @@ export default class FeatureQueryResolver {
 	queryFeatures(/**string*/ storeId) {
 		this.removeGraphics(storeId);
 
+		const geoTypes = [
+			"point",
+			"polyline",
+			"polygon",
+			"point-3d",
+			"polyline-3d",
+			"polygon-3d"
+		];
+		let symbols = Object.assign({}, this.propStoreSymbols[storeId]);
+		geoTypes.forEach(geoType => {
+			if (!symbols[geoType])
+				symbols[geoType] = this.symbols[geoType]
+		}, this);
+
 		let featureQuery = this.stores[storeId].query(this.filters[storeId], this.options[storeId]);
 		return when(featureQuery, results => {
 			let items = results.filter(result => !!result.geometry);
@@ -299,7 +318,11 @@ export default class FeatureQueryResolver {
 				return;
 			}
 
-			let transItems = items.map(item => this._transformGeometry(item));
+			let symbolItems = items.map(item => {
+				item.symbol = symbols[item.geometry.type];
+				return item;
+			});
+			let transItems = symbolItems.map(item => this._transformGeometry(item));
 
 			return when(Promise.all(transItems)).then(items => {
 				items.forEach(item => {
