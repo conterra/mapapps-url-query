@@ -2,5 +2,11 @@
 	"extends": "eslint-config-ct-prodeng",
 	"plugins": [
 		"vue"
-	]
+	],
+	"rules": {
+		"indent": [
+			"error",
+			"tab"
+		]
+	}
 }

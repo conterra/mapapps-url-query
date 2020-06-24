@@ -26,7 +26,7 @@ export default class FeatureQueryResolver {
 	activate() {
 		this.i18n = this._i18n.get();
 
-		let properties = this._properties || {};
+		const properties = this._properties || {};
 
 		let notify = properties.notifications;
 		if (notify === undefined) {
@@ -35,61 +35,61 @@ export default class FeatureQueryResolver {
 			notify = !!notify
 		}
 
-		let zoom = properties.zoomToResults;
+		const zoom = properties.zoomToResults;
 		zoom['activate'] = !!zoom.activate;
 
-		let propStores = properties.stores;
-		for (let storeId in propStores) {
-			let propStore = propStores[storeId];
+		const propStores = properties.stores;
+		for (const storeId in propStores) {
+			const propStore = propStores[storeId];
 
-			let propFilter = propStore.filter;
+			const propFilter = propStore.filter;
 			if (!this._isEmpty(propFilter)) {
 				this.propFilters[storeId] = propFilter;
 				this.propOperators[storeId] = propStore.operator || "$and";
 			}
 
-			let propOptions = propStore.options;
+			const propOptions = propStore.options;
 			if (!this._isEmpty(propOptions)) {
 				this.propOptions[storeId] = propOptions;
 			}
 
-			let propStoreNotify = propStore.notifications;
+			const propStoreNotify = propStore.notifications;
 			if (propStoreNotify === undefined) {
 				this.propStoreNotifies[storeId] = notify;
 			} else {
 				this.propStoreNotifies[storeId] = !!propStoreNotify;
 			}
 
-			let propStoreZoom = propStore.zoomToResults;
+			const propStoreZoom = propStore.zoomToResults;
 			if (propStoreZoom === undefined) {
 				this.propStoreZoom[storeId] = zoom;
 			} else {
 				this.propStoreZoom[storeId] = Object.assign({}, this.propStoreZoom[storeId], zoom, propStoreZoom);
 			}
 
-			let propStoreSymbols = propStore.symbols;
+			const propStoreSymbols = propStore.symbols;
 			if (!this._isEmpty(propStoreSymbols)) {
 				this.propStoreSymbols[storeId] = propStoreSymbols;
 			}
 
-			let propStorePopupTemplate = propStore.popupTemplate;
+			const propStorePopupTemplate = propStore.popupTemplate;
 			if (!this._isEmpty(propStorePopupTemplate)) {
 				this.propStorePopupTemplate[storeId] = propStorePopupTemplate;
 			}
 
-			let propStoreAttributes = propStore.attributes;
+			const propStoreAttributes = propStore.attributes;
 			if (!this._isEmpty(propStoreAttributes)) {
 				this.propAttributes[storeId] = propStoreAttributes;
 			} else if (!this._isEmpty(propStorePopupTemplate)) {
 				this.propAttributes[storeId] = [];
 
-				let popupContent = propStorePopupTemplate["content"];
+				const popupContent = propStorePopupTemplate["content"];
 				if (!this._isEmpty(popupContent)) {
 					popupContent.forEach(contentElement => {
-						let popupFieldInfos = contentElement["fieldInfos"];
+						const popupFieldInfos = contentElement["fieldInfos"];
 						if (!this._isEmpty(popupFieldInfos)) {
 							popupFieldInfos.forEach(fieldInfo => {
-								let fieldName = fieldInfo["fieldName"];
+								const fieldName = fieldInfo["fieldName"];
 								if (!this._isEmpty(fieldName)) {
 									this.propAttributes[storeId].push(fieldName);
 								}
@@ -108,19 +108,20 @@ export default class FeatureQueryResolver {
 	}
 
 	/**
-	 * Takes a decoded JSON URL object. Decodes incoming parameters. Filters only the parameters from the url which are necessary for this component.
+	 * Takes a decoded JSON URL object. Decodes incoming parameters.
+	 * Filters only the parameters from the url which are necessary for this component.
 	 * @param urlObject input url object
 	 */
 	decodeURLParameter(/**JSON*/ urlObject) {
 		urlObject = urlObject || {};
 
-		let queryString = this._getPropertyIgnoreCase(urlObject, "FeatureQuery");
+		const queryString = this._getPropertyIgnoreCase(urlObject, "FeatureQuery");
 		if (queryString === undefined) {
 			return;
 		}
 
-		let query = JSON.parse(queryString);
-		for (let storeId in query) {
+		const query = JSON.parse(queryString);
+		for (const storeId in query) {
 			this.urlFilters[storeId] = query[storeId].filter;
 			this.urlOptions[storeId] = query[storeId].options;
 		}
@@ -129,7 +130,7 @@ export default class FeatureQueryResolver {
 	}
 
 	addStore(store, properties) {
-		let storeId = this.getStoreId(store, properties);
+		const storeId = this.getStoreId(store, properties);
 
 		if (storeId) {
 			this.stores[storeId] = store;
@@ -139,9 +140,9 @@ export default class FeatureQueryResolver {
 	}
 
 	removeStore(store, properties) {
-		let storeId = this.getStoreId(store, properties);
+		const storeId = this.getStoreId(store, properties);
 
-		if (!!storeId) {
+		if (storeId) {
 			this.removeGraphics(storeId);
 			delete this.stores[storeId];
 		}
@@ -153,7 +154,7 @@ export default class FeatureQueryResolver {
 		}
 
 		// check length property
-		let length = item.length;
+		const length = item.length;
 		if (length > 0) {
 			return false;
 		} else if (length === 0) {
@@ -164,7 +165,7 @@ export default class FeatureQueryResolver {
 		if (!typeof item === 'object' && item !== null) {
 			return true;
 		}
-		for (let key in item) {
+		for (const key in item) {
 			if (item.hasOwnProperty(key)) {
 				return false;
 			}
@@ -178,9 +179,9 @@ export default class FeatureQueryResolver {
 			return object[property];
 		}
 
-		let lowerProperty = property.toLowerCase();
+		const lowerProperty = property.toLowerCase();
 
-		for (let prop in object) {
+		for (const prop in object) {
 			if (prop.toLowerCase() == lowerProperty) {
 				return object[prop];
 			}
@@ -190,7 +191,7 @@ export default class FeatureQueryResolver {
 	}
 
 	_mergeArrays(...arrays) {
-		let result = [];
+		const result = [];
 
 		arrays.forEach(array => {
 			array.forEach(element => result.push(element));
@@ -210,8 +211,8 @@ export default class FeatureQueryResolver {
 	}
 
 	_getCurrentMapCRS() {
-		let mapState = this._mapState;
-		let wkid = mapState && mapState.getSpatialReference().wkid;
+		const mapState = this._mapState;
+		const wkid = mapState && mapState.getSpatialReference().wkid;
 		return wkid;
 	}
 
@@ -221,20 +222,22 @@ export default class FeatureQueryResolver {
 			console.warn("OmniSearchModel: search result contains no geometry, cannot show/draw item on map!");
 		}
 		if (geom && !(geom instanceof Geometry)) {
-			console.warn("OmniSearchModel: geometry is not an esri.geometry.Geometry! Try to parse plain json from it!");
+			console.warn("OmniSearchModel: geometry is not an esri.geometry.Geometry!"
+				+ " Try to parse plain json from it!");
 			try {
 				geom = item.geometry = geom_jsonUtils.fromJson(geom);
 			} catch (e) {
-				console.warn("OmniSearchModel: geometry (" + geom + ") is not an esri.geometry.Geometry! Parsing failed: " + e, e);
+				console.warn("OmniSearchModel: geometry (" + geom + ") is not an esri.geometry.Geometry!"
+					+ " Parsing failed: " + e, e);
 				// clear from result
 				item.geometry = undefined;
 				geom = undefined;
 			}
 		}
-		let mapWkid = this._getCurrentMapCRS();
-		let coordinateTransformer = this._coordinateTransformer;
+		const mapWkid = this._getCurrentMapCRS();
+		const coordinateTransformer = this._coordinateTransformer;
 		if (mapWkid && coordinateTransformer) {
-			let extent = item.extent;
+			const extent = item.extent;
 			if (extent) {
 				item = when(coordinateTransformer.transform(extent, mapWkid)).then(extent => {
 					item.extent = extent;
@@ -261,8 +264,8 @@ export default class FeatureQueryResolver {
 		geometries.forEach(geometry => {
 			let extent = geometry.get("extent");
 			if (!extent) {
-				let x = geometry.get("x");
-				let y = geometry.get("y");
+				const x = geometry.get("x");
+				const y = geometry.get("y");
 				extent = new Extent(x, y, x, y, geometry.get("spatialReference"));
 			}
 
@@ -277,17 +280,17 @@ export default class FeatureQueryResolver {
 	}
 
 	_zoomTo(extent, factor, defaultScale) {
-		if (!!this.handle) {
+		if (this.handle) {
 			this.handle.remove();
 		}
 
 		this.handle = this._mapWidget.watch("view", event => {
 			const view = event.value;
-			if (!!view) {
+			if (view) {
 				this.handle.remove();
 
 				view.when().then(() => {
-					if (!!extent) {
+					if (extent) {
 						if (extent.height !== 0 || extent.width !== 0) {
 							view.goTo(extent.expand(factor), this.animationOptions);
 						} else {
@@ -316,7 +319,7 @@ export default class FeatureQueryResolver {
 	}
 
 	removeGraphics(/** string */ storeId) {
-		let graphics = this.graphics[storeId];
+		const graphics = this.graphics[storeId];
 
 		if (this._isEmpty(graphics)) {
 			return;
@@ -339,25 +342,25 @@ export default class FeatureQueryResolver {
 			"polyline-3d",
 			"polygon-3d"
 		];
-		let symbols = Object.assign({}, this.propStoreSymbols[storeId]);
+		const symbols = Object.assign({}, this.propStoreSymbols[storeId]);
 		geoTypes.forEach(geoType => {
 			if (!symbols[geoType]) {
 				symbols[geoType] = this.symbols[geoType]
 			}
 		}, this);
 
-		let popupTemplate = this.propStorePopupTemplate[storeId];
+		const popupTemplate = this.propStorePopupTemplate[storeId];
 
-		let featureQuery = this.stores[storeId].query(this.filters[storeId], this.options[storeId]);
+		const featureQuery = this.stores[storeId].query(this.filters[storeId], this.options[storeId]);
 		return when(featureQuery, results => {
-			let items = results.filter(result => !!result.geometry);
+			const items = results.filter(result => !!result.geometry);
 
 			if (items.length < 1) {
 				return;
 			}
 
-			let symbolItems = items.map(item => {
-				let symbol = symbols[item.geometry.type];
+			const symbolItems = items.map(item => {
+				const symbol = symbols[item.geometry.type];
 
 				if (!this._isEmpty(symbol)) {
 					item.symbol = symbols[item.geometry.type];
@@ -365,11 +368,11 @@ export default class FeatureQueryResolver {
 
 				return item;
 			}, this);
-			let popupItems = symbolItems.map(item => {
+			const popupItems = symbolItems.map(item => {
 				if (!this._isEmpty(popupTemplate)) {
 					item.popupTemplate = popupTemplate;
 
-					let attributes = this.propAttributes[storeId];
+					const attributes = this.propAttributes[storeId];
 					if (Array.isArray(attributes)) {
 						item["attributes"] = {};
 						attributes.forEach(attribute => item["attributes"][attribute] = item[attribute], this);
@@ -378,11 +381,11 @@ export default class FeatureQueryResolver {
 
 				return item;
 			}, this);
-			let transItems = popupItems.map(item => this._transformGeometry(item));
+			const transItems = popupItems.map(item => this._transformGeometry(item));
 
 			return when(Promise.all(transItems)).then(items => {
 				items.forEach(item => {
-					let graphics = this.graphics[storeId] || [];
+					const graphics = this.graphics[storeId] || [];
 					graphics.push(this._highlighter.highlight(item));
 					this.graphics[storeId] = graphics;
 				});
@@ -393,10 +396,10 @@ export default class FeatureQueryResolver {
 	}
 
 	queryStores(/**array*/ storeIds) {
-		let storeQueries = [];
+		const storeQueries = [];
 
 		storeIds.forEach(storeId => {
-			let store = this.stores[storeId];
+			const store = this.stores[storeId];
 			let filter = this.filters[storeId];
 			let option = this.options[storeId];
 
@@ -419,18 +422,18 @@ export default class FeatureQueryResolver {
 			filter = filter || {};
 
 			if (maxCount > 0) {
-				let countOptions = Object.assign({}, option, {count: 0});
+				const countOptions = Object.assign({}, option, { count: 0 });
 
 				// remove the sort operation, because it is not supported on counting requests
 				delete countOptions.sort;
 
-				let countQuery = store.query(filter, countOptions);
+				const countQuery = store.query(filter, countOptions);
 
 				storeQueries.push(
 					when(countQuery).then(result => {
-						let total = result["total"];
+						const total = result["total"];
 
-						let notifiy = (
+						const notifiy = (
 							this._log !== undefined
 							&& this.propStoreNotifies[storeId]
 						);
@@ -464,15 +467,14 @@ export default class FeatureQueryResolver {
 		});
 
 		when(Promise.all(storeQueries)).then(() => {
-			let overallZoom = {
+			const overallZoom = {
 				factor: Number.MIN_VALUE,
 				defaultScale: 1
 			};
 
-			let items = [];
 			let geometries = [];
 			storeIds.forEach(storeId => {
-				let storedItems = this.items[storeId];
+				const storedItems = this.items[storeId];
 				if (!!storedItems && storedItems.length > 0) {
 					storedItems.map(item => {
 						return {
@@ -482,17 +484,17 @@ export default class FeatureQueryResolver {
 					});
 				}
 
-				let zoom = this.propStoreZoom[storeId];
+				const zoom = this.propStoreZoom[storeId];
 
 				if (!zoom || !(zoom.activate) || !storedItems) {
 					return;
 				}
 
-				if (!!(zoom.factor)) {
+				if (zoom.factor) {
 					overallZoom.factor = Math.max(overallZoom.factor, zoom.factor);
 				}
 
-				if (!!(zoom.defaultScale)) {
+				if (zoom.defaultScale) {
 					overallZoom.defaultScale = Math.max(overallZoom.defaultScale, zoom.defaultScale);
 				}
 
@@ -500,18 +502,18 @@ export default class FeatureQueryResolver {
 			});
 
 			if (geometries.length > 0) {
-				let overallExtent = this._calcExtent(geometries);
+				const overallExtent = this._calcExtent(geometries);
 				this._zoomTo(overallExtent, overallZoom.factor, overallZoom.defaultScale);
 			}
 		}, this);
 	}
 
 	queryAll() {
-		let storeIds = this.getRequestedStores();
+		const storeIds = this.getRequestedStores();
 
 		storeIds.forEach(storeId => {
-			let propFilter = Object.assign({}, this.propFilters[storeId]);
-			let urlFilter = Object.assign({}, this.urlFilters[storeId]);
+			const propFilter = Object.assign({}, this.propFilters[storeId]);
+			const urlFilter = Object.assign({}, this.urlFilters[storeId]);
 			if (!this._isEmpty(propFilter) && !this._isEmpty(urlFilter)) {
 				this.filters[storeId] = {};
 				this.filters[storeId][this.propOperators[storeId]] = [
@@ -524,14 +526,14 @@ export default class FeatureQueryResolver {
 				this.filters[storeId] = urlFilter || {};
 			}
 
-			let propOptions = Object.assign({}, this.propOptions[storeId]);
-			let urlOptions = Object.assign({}, this.urlOptions[storeId]);
+			const propOptions = Object.assign({}, this.propOptions[storeId]);
+			const urlOptions = Object.assign({}, this.urlOptions[storeId]);
 			if (propOptions !== undefined && urlOptions !== undefined) {
 				this.options[storeId] = Object.assign({}, propOptions, urlOptions);
 
-				let propCount = propOptions.count;
-				let urlCount = urlOptions.count;
-				let minCount = Math.min(
+				const propCount = propOptions.count;
+				const urlCount = urlOptions.count;
+				const minCount = Math.min(
 					isNaN(propCount) ? Infinity : propCount,
 					isNaN(urlCount) ? Infinity : urlCount
 				);
@@ -544,7 +546,7 @@ export default class FeatureQueryResolver {
 				this.options[storeId] = urlOptions || {};
 			}
 
-			Object.assign(this.options[storeId], {fields: {geometry: 1}});
+			Object.assign(this.options[storeId], { fields: { geometry: 1 } });
 		}, this);
 
 		this.queryStores(storeIds);
