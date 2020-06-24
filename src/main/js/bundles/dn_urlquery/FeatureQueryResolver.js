@@ -14,6 +14,7 @@ export default class FeatureQueryResolver {
 	propStoreNotifies = {};
 	propStoreZoom = {};
 	propStoreSymbols = {};
+	propAttributes = {};
 	propStorePopupTemplate = {};
 
 	urlFilters = {};
@@ -69,6 +70,10 @@ export default class FeatureQueryResolver {
 			let propStoreSymbols = propStore.symbols;
 			if (!this._isEmpty(propStoreSymbols))
 				this.propStoreSymbols[storeId] = propStoreSymbols;
+
+			let propStoreAttributes = propStore.attributes;
+			if (!this._isEmpty(propStoreAttributes))
+				this.propAttributes[storeId] = propStoreAttributes;
 
 			let propStorePopupTemplate = propStore.popupTemplate;
 			if (!this._isEmpty(propStorePopupTemplate))
@@ -331,8 +336,15 @@ export default class FeatureQueryResolver {
 				return item;
 			}, this);
 			let popupItems = symbolItems.map(item => {
-				if (!this._isEmpty(popupTemplate))
+				if (!this._isEmpty(popupTemplate)) {
 					item.popupTemplate = popupTemplate;
+
+					let attributes = this.propAttributes[storeId];
+					if (Array.isArray(attributes)) {
+						item["attributes"] = {};
+						attributes.forEach(attribute => item["attributes"][attribute] = item[attribute], this);
+					}
+				}
 
 				return item;
 			}, this);
