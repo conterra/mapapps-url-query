@@ -2,6 +2,7 @@ import when from "apprt-core/when";
 import customReplacer from "apprt-core/string-replace";
 import Geometry from "esri/geometry/Geometry";
 import Extent from "esri/geometry/Extent";
+import geom_jsonUtils from "esri/geometry/support/jsonUtils";
 
 export default class FeatureQueryResolver {
 	stores = {};
@@ -202,6 +203,7 @@ export default class FeatureQueryResolver {
 
 	_removeArrayElements(/** array*/ array, ...elements) {
 		elements.forEach(element => {
+			let index;
 			while ((index = array.indexOf(element)) > -1) {
 				array.splice(index, 1);
 			}
