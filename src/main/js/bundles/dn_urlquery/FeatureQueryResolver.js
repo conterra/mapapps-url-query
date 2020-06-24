@@ -85,7 +85,7 @@ export default class FeatureQueryResolver {
 
 		this.symbols = properties.symbols || {};
 
-		this.animationOptions = properties.animationOptions;
+		this.animationOptions = properties.animationOptions || {};
 
 		this.queryAll();
 	}
