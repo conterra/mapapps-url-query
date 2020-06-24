@@ -11,7 +11,7 @@ https://demos.conterra.de/mapapps/resources/apps/downloads_url_query/index.html?
 * Combination of the first two examples:
 https://demos.conterra.de/mapapps/resources/apps/downloads_url_query/index.html?FeatureQuery={"ct_countries_1":{"filter":{"code":{"$eqw":"F*"}}},"bathingwater_1":{"filter":{"countryCode":{"$eqw":"BE"}}}}
 * Show only one feature, with additional information:
-https://demos.conterra.de/mapapps/resources/apps/downloads_url_query/index.html?FeatureQuery={"bathingwater_1":{"filter":{"BWID":{"$eqw":"BE107760"}}}}
+https://demos.conterra.de/mapapps/resources/apps/downloads_url_query/index.html?FeatureQuery={"bathingwater_1":{"filter":{"bathingWaterName":{"$eqw":"BOCHOLT - GOOLDERHEIDE"}}}}
 
 Installation Guide
 ------------------
@@ -39,11 +39,11 @@ To enable notification and feature information, you have to enable the bundles `
         "autoInfo": true,
         "symbols": {
           "point": {
-            "type": "esriPMS",
+            "type": "picture-marker",
             ...
           },
           "polygon": {
-            "type": "esriSFS",
+            "type": "simple-fill",
             ...
           }
         },
@@ -76,7 +76,8 @@ To enable notification and feature information, you have to enable the bundles `
 | stores.[storeId].filter                | JSON object                     | ```{}```                    | Predefined filters, to limit the access to the features. <br> For more information have a look at <br> https://docs.conterra.de/en/mapapps/latest/developersguide/concepts/complex-query.html#_complex_query_language |
 | stores.[storeId].operator              | ```"$and"``` &#124; ```"$or"``` | ```"$and"```                | Logical operator to combine the predefined filters with the user-defined one.                                                                                                                                         |
 | stores.[storeId].zoomToResults         | JSON object                     | default ```zoomToResults``` | Overrides the default zoomToResults to change the behavior of every store.                                                                                                                                            |
-| stores.[storeId].symbols.[featureType] | JSON object                     | default ```symbols```       | Overrides the default symbols to change the styling of the features provides by this store                                                                                                                            |
+| stores.[storeId].symbols.[featureType] | JSON object                     | default ```symbols```       | Overrides the default symbols to change the styling of the features provides by this store.                                                                                                                           |
+| stores.[storeId].attributes            | array of strings                |                             | Sets the attributes for the features in this store. Necessary to show attributes in popups.                                                                                                                           |
 | stores.[storeId].options.count         | positive integer                | infinitely                  | Defines the limit of requested features. If more returned, no feature will be shown.                                                                                                                                  |
 
 Development Guide
