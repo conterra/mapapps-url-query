@@ -172,24 +172,24 @@ export default class FeatureQueryResolver {
 		return undefined;
 	}
 
-	_mergeArrays(...args) {
+	_mergeArrays(...arrays) {
 		let result = [];
 
-		args.forEach(argument => {
-			argument.forEach(element => result.push(element));
+		arrays.forEach(array => {
+			array.forEach(element => result.push(element));
 		});
 
 		return result;
 	}
 
-	_ensureTop(mapModel, graphicsNode) {
-		let pane = mapModel.getGlassPaneLayer();
-		let oldPos = pane.indexOfChild(graphicsNode);
-		if (oldPos > 0) {
-			pane.moveChild(oldPos, 0);
-			return false;
-		}
-		return true;
+	_removeArrayElements(/** array*/ array, ...elements) {
+		elements.forEach(element => {
+			while ((index = array.indexOf(element)) > -1) {
+				array.splice(index, 1);
+			}
+		});
+
+		return array;
 	}
 
 	_getCurrentMapCRS() {
@@ -307,9 +307,7 @@ export default class FeatureQueryResolver {
 
 		graphics.forEach(graphic => {
 			graphic.remove();
-			while ((index = this.graphics[storeId].indexOf(graphic)) > -1) {
-				this.graphics[storeId].splice(index, 1);
-			}
+			this.graphics[storeId] = this._removeArrayElements(this.graphics[storeId], graphic);
 		});
 	}
 
