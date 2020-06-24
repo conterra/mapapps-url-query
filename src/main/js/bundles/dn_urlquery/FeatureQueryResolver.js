@@ -68,16 +68,19 @@ export default class FeatureQueryResolver {
 			}
 
 			let propStoreSymbols = propStore.symbols;
-			if (!this._isEmpty(propStoreSymbols))
+			if (!this._isEmpty(propStoreSymbols)) {
 				this.propStoreSymbols[storeId] = propStoreSymbols;
+			}
 
 			let propStoreAttributes = propStore.attributes;
-			if (!this._isEmpty(propStoreAttributes))
+			if (!this._isEmpty(propStoreAttributes)) {
 				this.propAttributes[storeId] = propStoreAttributes;
+			}
 
 			let propStorePopupTemplate = propStore.popupTemplate;
-			if (!this._isEmpty(propStorePopupTemplate))
+			if (!this._isEmpty(propStorePopupTemplate)) {
 				this.propStorePopupTemplate[storeId] = propStorePopupTemplate;
+			}
 		}
 
 		this.symbols = properties.symbols || {};
@@ -95,8 +98,9 @@ export default class FeatureQueryResolver {
 		urlObject = urlObject || {};
 
 		let queryString = this._getPropertyIgnoreCase(urlObject, "FeatureQuery");
-		if (queryString === undefined)
+		if (queryString === undefined) {
 			return;
+		}
 
 		let query = JSON.parse(queryString);
 		for (let storeId in query) {
@@ -127,8 +131,9 @@ export default class FeatureQueryResolver {
 	}
 
 	_isEmpty(item) {
-		if (!item)
+		if (!item) {
 			return true;
+		}
 
 		// check length property
 		let length = item.length;
@@ -159,8 +164,9 @@ export default class FeatureQueryResolver {
 		let lowerProperty = property.toLowerCase();
 
 		for (let prop in object) {
-			if (prop.toLowerCase() == lowerProperty)
+			if (prop.toLowerCase() == lowerProperty) {
 				return object[prop];
+			}
 		}
 
 		return undefined;
@@ -229,8 +235,9 @@ export default class FeatureQueryResolver {
 	}
 
 	_calcExtent(/** Array */ geometries) {
-		if (geometries.length < 1)
+		if (geometries.length < 1) {
 			return;
+		}
 
 		let overallExtent;
 
@@ -242,33 +249,38 @@ export default class FeatureQueryResolver {
 				extent = new Extent(x, y, x, y, geometry.get("spatialReference"));
 			}
 
-			if (!this._isEmpty(overallExtent))
+			if (!this._isEmpty(overallExtent)) {
 				overallExtent = overallExtent.union(extent);
-			else
+			} else {
 				overallExtent = extent;
+			}
 		});
 
 		return overallExtent;
 	}
 
 	_zoomTo(extent, factor, defaultScale) {
-		if (!!this.handle)
+		if (!!this.handle) {
 			this.handle.remove();
+		}
 
 		this.handle = this._mapWidget.watch("view", event => {
 			const view = event.value;
 			if (!!view) {
 				this.handle.remove();
 
-				if (!!extent)
-					if (extent.height !== 0 || extent.width !== 0) {
-						view.goTo(extent.expand(factor), this.animationOptions);
-					} else {
-						view.goTo({
-							target: extent.get("center"),
-							scale: defaultScale
-						}, this.animationOptions);
+				view.when().then(() => {
+					if (!!extent) {
+						if (extent.height !== 0 || extent.width !== 0) {
+							view.goTo(extent.expand(factor), this.animationOptions);
+						} else {
+							view.goTo({
+								target: extent.get("center"),
+								scale: defaultScale
+							}, this.animationOptions);
+						}
 					}
+				});
 			}
 		});
 	}
@@ -289,8 +301,9 @@ export default class FeatureQueryResolver {
 	removeGraphics(/** string */ storeId) {
 		let graphics = this.graphics[storeId];
 
-		if (this._isEmpty(graphics))
+		if (this._isEmpty(graphics)) {
 			return;
+		}
 
 		graphics.forEach(graphic => {
 			graphic.remove();
@@ -313,8 +326,9 @@ export default class FeatureQueryResolver {
 		];
 		let symbols = Object.assign({}, this.propStoreSymbols[storeId]);
 		geoTypes.forEach(geoType => {
-			if (!symbols[geoType])
+			if (!symbols[geoType]) {
 				symbols[geoType] = this.symbols[geoType]
+			}
 		}, this);
 
 		let popupTemplate = this.propStorePopupTemplate[storeId];
@@ -330,8 +344,9 @@ export default class FeatureQueryResolver {
 			let symbolItems = items.map(item => {
 				let symbol = symbols[item.geometry.type];
 
-				if (!this._isEmpty(symbol))
+				if (!this._isEmpty(symbol)) {
 					item.symbol = symbols[item.geometry.type];
+				}
 
 				return item;
 			}, this);
@@ -454,14 +469,17 @@ export default class FeatureQueryResolver {
 
 				let zoom = this.propStoreZoom[storeId];
 
-				if (!zoom || !(zoom.activate) || !storedItems)
+				if (!zoom || !(zoom.activate) || !storedItems) {
 					return;
+				}
 
-				if (!!(zoom.factor))
+				if (!!(zoom.factor)) {
 					overallZoom.factor = Math.max(overallZoom.factor, zoom.factor);
+				}
 
-				if (!!(zoom.defaultScale))
+				if (!!(zoom.defaultScale)) {
 					overallZoom.defaultScale = Math.max(overallZoom.defaultScale, zoom.defaultScale);
+				}
 
 				geometries = storedItems.map(item => item.geometry);
 			});
