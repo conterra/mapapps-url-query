@@ -72,14 +72,31 @@ export default class FeatureQueryResolver {
 				this.propStoreSymbols[storeId] = propStoreSymbols;
 			}
 
-			let propStoreAttributes = propStore.attributes;
-			if (!this._isEmpty(propStoreAttributes)) {
-				this.propAttributes[storeId] = propStoreAttributes;
-			}
-
 			let propStorePopupTemplate = propStore.popupTemplate;
 			if (!this._isEmpty(propStorePopupTemplate)) {
 				this.propStorePopupTemplate[storeId] = propStorePopupTemplate;
+			}
+
+			let propStoreAttributes = propStore.attributes;
+			if (!this._isEmpty(propStoreAttributes)) {
+				this.propAttributes[storeId] = propStoreAttributes;
+			} else if (!this._isEmpty(propStorePopupTemplate)) {
+				this.propAttributes[storeId] = [];
+
+				let popupContent = propStorePopupTemplate["content"];
+				if (!this._isEmpty(popupContent)) {
+					popupContent.forEach(contentElement => {
+						let popupFieldInfos = contentElement["fieldInfos"];
+						if (!this._isEmpty(popupFieldInfos)) {
+							popupFieldInfos.forEach(fieldInfo => {
+								let fieldName = fieldInfo["fieldName"];
+								if (!this._isEmpty(fieldName)) {
+									this.propAttributes[storeId].push(fieldName);
+								}
+							}, this);
+						}
+					});
+				}
 			}
 		}
 

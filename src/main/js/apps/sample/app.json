@@ -116,6 +116,72 @@
 						},
 						"zoomToResults": {
 							"activate": false
+						},
+						"popupTemplate": {
+							"title": "{bathingWaterName}",
+							"content": [
+								{
+									"type": "fields",
+									"fieldInfos": [
+										{
+											"fieldName": "bathingWaterName",
+											"label": "Name"
+										},
+										{
+											"fieldName": "countryName",
+											"label": "Country"
+										},
+										{
+											"fieldName": "bwWaterCategory",
+											"label": "Water type"
+										},
+										{
+											"fieldName": "qualityStatus_minus10",
+											"label": "Quality in 2009"
+										},
+										{
+											"fieldName": "qualityStatus_minus9",
+											"label": "Quality in 2010"
+										},
+										{
+											"fieldName": "qualityStatus_minus8",
+											"label": "Quality in 2011"
+										},
+										{
+											"fieldName": "qualityStatus_minus7",
+											"label": "Quality in 2012"
+										},
+										{
+											"fieldName": "qualityStatus_minus6",
+											"label": "Quality in 2013"
+										},
+										{
+											"fieldName": "qualityStatus_minus5",
+											"label": "Quality in 2014"
+										},
+										{
+											"fieldName": "qualityStatus_minus4",
+											"label": "Quality in 2015"
+										},
+										{
+											"fieldName": "qualityStatus_minus3",
+											"label": "Quality in 2016"
+										},
+										{
+											"fieldName": "qualityStatus_minus2",
+											"label": "Quality in 2017"
+										},
+										{
+											"fieldName": "qualityStatus_minus1",
+											"label": "Quality in 2018"
+										},
+										{
+											"fieldName": "qualityStatus",
+											"label": "Quality in 2019"
+										}
+									]
+								}
+							]
 						}
 					},
 					"ct_countries_1": {
@@ -128,10 +194,6 @@
 							"factor": 1.15,
 							"defaultScale": 15000
 						},
-						"attributes": [
-							"placename",
-							"code"
-						],
 						"popupTemplate": {
 							"title": "{placename}",
 							"content": [
