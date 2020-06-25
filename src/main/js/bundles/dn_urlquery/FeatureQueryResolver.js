@@ -133,7 +133,7 @@ export default class FeatureQueryResolver {
 	addStore(store, properties) {
 		const storeId = this.getStoreId(store, properties);
 
-		if (storeId) {
+		if (!!storeId) {
 			this.stores[storeId] = store;
 		}
 
@@ -143,7 +143,7 @@ export default class FeatureQueryResolver {
 	removeStore(store, properties) {
 		const storeId = this.getStoreId(store, properties);
 
-		if (storeId) {
+		if (!!storeId) {
 			this.removeGraphics(storeId);
 			delete this.stores[storeId];
 		}
@@ -221,16 +221,22 @@ export default class FeatureQueryResolver {
 	_transformGeometry(item) {
 		let geom = item.geometry;
 		if (!geom) {
-			console.warn("OmniSearchModel: search result contains no geometry, cannot show/draw item on map!");
+			console.warn(
+				"OmniSearchModel: search result contains no geometry, cannot show/draw item on map!"
+			);
 		}
-		if (geom && !(geom instanceof Geometry)) {
-			console.warn("OmniSearchModel: geometry is not an esri.geometry.Geometry!"
-				+ " Try to parse plain json from it!");
+		if (!!geom && !(geom instanceof Geometry)) {
+			console.warn(
+				"OmniSearchModel: geometry is not an esri.geometry.Geometry!"
+				+ " Try to parse plain json from it!"
+			);
 			try {
 				geom = item.geometry = geom_jsonUtils.fromJson(geom);
 			} catch (e) {
-				console.warn("OmniSearchModel: geometry (" + geom + ") is not an esri.geometry.Geometry!"
-					+ " Parsing failed: " + e, e);
+				console.warn(
+					"OmniSearchModel: geometry (" + geom + ") is not an esri.geometry.Geometry!"
+					+ " Parsing failed: " + e, e
+				);
 				// clear from result
 				item.geometry = undefined;
 				geom = undefined;
@@ -238,15 +244,15 @@ export default class FeatureQueryResolver {
 		}
 		const mapWkid = this._getCurrentMapCRS();
 		const coordinateTransformer = this._coordinateTransformer;
-		if (mapWkid && coordinateTransformer) {
+		if (!!mapWkid && !!coordinateTransformer) {
 			const extent = item.extent;
-			if (extent) {
+			if (!!extent) {
 				item = when(coordinateTransformer.transform(extent, mapWkid)).then(extent => {
 					item.extent = extent;
 					return item;
 				});
 			}
-			if (geom) {
+			if (!!geom) {
 				item = when(coordinateTransformer.transform(geom, mapWkid)).then(geometry => {
 					item.geometry = geometry;
 					return item;
@@ -282,17 +288,17 @@ export default class FeatureQueryResolver {
 	}
 
 	_zoomTo(extent, factor, defaultScale) {
-		if (this.handle) {
+		if (!!this.handle) {
 			this.handle.remove();
 		}
 
 		this.handle = this._mapWidget.watch("view", event => {
 			const view = event.value;
-			if (view) {
+			if (!!view) {
 				this.handle.remove();
 
 				view.when().then(() => {
-					if (extent) {
+					if (!!extent) {
 						if (extent.height !== 0 || extent.width !== 0) {
 							view.goTo(extent.expand(factor), this.animationOptions);
 						} else {
@@ -424,7 +430,7 @@ export default class FeatureQueryResolver {
 			filter = filter || {};
 
 			if (maxCount > 0) {
-				const countOptions = Object.assign({}, option, { count: 0 });
+				const countOptions = Object.assign({}, option, {count: 0});
 
 				// remove the sort operation, because it is not supported on counting requests
 				delete countOptions.sort;
@@ -445,7 +451,7 @@ export default class FeatureQueryResolver {
 						});
 
 						if (total === undefined) {
-							if (notifiy) {
+							if (!!notifiy) {
 								replace(this.i18n.notification.totalError, {
 									store: storeId
 								});
@@ -456,7 +462,7 @@ export default class FeatureQueryResolver {
 
 						if (total <= maxCount) {
 							return this.queryFeatures(storeId);
-						} else if (notifiy) {
+						} else if (!!notifiy) {
 							replace(this.i18n.notification.tooManyFeatures, {
 								store: storeId
 							});
@@ -492,11 +498,11 @@ export default class FeatureQueryResolver {
 					return;
 				}
 
-				if (zoom.factor) {
+				if (!!zoom.factor) {
 					overallZoom.factor = Math.max(overallZoom.factor, zoom.factor);
 				}
 
-				if (zoom.defaultScale) {
+				if (!!zoom.defaultScale) {
 					overallZoom.defaultScale = Math.max(overallZoom.defaultScale, zoom.defaultScale);
 				}
 
@@ -548,7 +554,13 @@ export default class FeatureQueryResolver {
 				this.options[storeId] = urlOptions || {};
 			}
 
-			Object.assign(this.options[storeId], { fields: { geometry: 1 } });
+			Object.assign(
+				this.options[storeId],
+				{
+					fields: {
+						geometry: 1
+					}
+				});
 		}, this);
 
 		this.queryStores(storeIds);
