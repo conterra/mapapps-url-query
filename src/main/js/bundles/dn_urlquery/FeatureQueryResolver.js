@@ -77,10 +77,30 @@ export default class FeatureQueryResolver {
 				this.propStoreSymbols[storeId] = propStoreSymbols;
 			}
 
-			const propStorePopupTemplate = propStore.popupTemplate;
+			let propStorePopupTemplate = propStore.popupTemplate;
 			const propStoreAttributes = propStore.attributes;
+			const propStoreAgsstoreFields = propStore.agsstoreFields;
 
 			if (!this._isEmpty(propStorePopupTemplate)) {
+				this.propStorePopupTemplate[storeId] = propStorePopupTemplate;
+			} else if (!this._isEmpty(propStoreAgsstoreFields)) {
+				let fieldInfos = [];
+
+				propStoreAgsstoreFields.forEach(agsstoreField => {
+					fieldInfos.push({
+						fieldName: agsstoreField["name"],
+						label: agsstoreField["title"]
+					});
+				});
+
+				propStorePopupTemplate = {
+					title: storeId,
+					content: [{
+						type: "fields",
+						fieldInfos: fieldInfos
+					}]
+				};
+
 				this.propStorePopupTemplate[storeId] = propStorePopupTemplate;
 			} else if (!this._isEmpty(propStoreAttributes)) {
 				let fieldInfos = [];
