@@ -194,24 +194,10 @@
 							"factor": 1.15,
 							"defaultScale": 15000
 						},
-						"popupTemplate": {
-							"title": "{placename}",
-							"content": [
-								{
-									"type": "fields",
-									"fieldInfos": [
-										{
-											"fieldName": "placename",
-											"label": "Name"
-										},
-										{
-											"fieldName": "code",
-											"label": "Code"
-										}
-									]
-								}
-							]
-						}
+						"attributes": [
+							"placename",
+							"code"
+						]
 					}
 				}
 			}
