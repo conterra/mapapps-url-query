@@ -194,15 +194,9 @@
 							"factor": 1.15,
 							"defaultScale": 15000
 						},
-						"agsstoreFields": [
-							{
-								"name": "placename",
-								"title": "Name"
-							},
-							{
-								"name": "code",
-								"title": "Code"
-							}
+						"attributes": [
+							"placename",
+							"code"
 						]
 					}
 				}
