@@ -65,7 +65,11 @@ export default class FeatureQueryResolver {
 			if (propStoreZoom === undefined) {
 				this.propStoreZoom[storeId] = zoom;
 			} else {
-				this.propStoreZoom[storeId] = Object.assign({}, this.propStoreZoom[storeId], zoom, propStoreZoom);
+				this.propStoreZoom[storeId] = Object.assign(
+					{},
+					this.propStoreZoom[storeId],
+					zoom, propStoreZoom
+				);
 			}
 
 			const propStoreSymbols = propStore.symbols;
@@ -113,7 +117,7 @@ export default class FeatureQueryResolver {
 	 * Filters only the parameters from the url which are necessary for this component.
 	 * @param urlObject input url object
 	 */
-	decodeURLParameter(/**JSON*/ urlObject) {
+	decodeURLParameter(/** JSON */ urlObject) {
 		urlObject = urlObject || {};
 
 		const queryString = this._getPropertyIgnoreCase(urlObject, "FeatureQuery");
@@ -175,7 +179,7 @@ export default class FeatureQueryResolver {
 		return true;
 	}
 
-	_getPropertyIgnoreCase(/**Object*/ object, /**string*/ property) {
+	_getPropertyIgnoreCase(/** Object */ object, /** string */ property) {
 		if (object.hasOwnProperty(property)) {
 			return object[property];
 		}
@@ -191,7 +195,7 @@ export default class FeatureQueryResolver {
 		return undefined;
 	}
 
-	_mergeArrays(...arrays) {
+	_mergeArrays(/** Array */ ...arrays) {
 		const result = [];
 
 		arrays.forEach(array => {
@@ -201,7 +205,7 @@ export default class FeatureQueryResolver {
 		return result;
 	}
 
-	_removeArrayElements(/** array*/ array, ...elements) {
+	_removeArrayElements(/** Array */ array, ...elements) {
 		elements.forEach(element => {
 			let index;
 			while ((index = array.indexOf(element)) > -1) {
@@ -287,7 +291,7 @@ export default class FeatureQueryResolver {
 		return overallExtent;
 	}
 
-	_zoomTo(extent, factor, defaultScale) {
+	_zoomTo(/** Extent */ extent, /** float */ factor, /** integer */ defaultScale) {
 		if (!!this.handle) {
 			this.handle.remove();
 		}
@@ -335,11 +339,14 @@ export default class FeatureQueryResolver {
 
 		graphics.forEach(graphic => {
 			graphic.remove();
-			this.graphics[storeId] = this._removeArrayElements(this.graphics[storeId], graphic);
+			this.graphics[storeId] = this._removeArrayElements(
+				this.graphics[storeId],
+				graphic
+			);
 		});
 	}
 
-	queryFeatures(/**string*/ storeId) {
+	queryFeatures(/** string */ storeId) {
 		this.removeGraphics(storeId);
 
 		const geoTypes = [
@@ -403,7 +410,7 @@ export default class FeatureQueryResolver {
 		});
 	}
 
-	queryStores(/**array*/ storeIds) {
+	queryStores(/** Array */ storeIds) {
 		const storeQueries = [];
 
 		storeIds.forEach(storeId => {
@@ -430,7 +437,11 @@ export default class FeatureQueryResolver {
 			filter = filter || {};
 
 			if (maxCount > 0) {
-				const countOptions = Object.assign({}, option, {count: 0});
+				const countOptions = Object.assign(
+					{},
+					option,
+					{count: 0}
+				);
 
 				// remove the sort operation, because it is not supported on counting requests
 				delete countOptions.sort;
@@ -452,9 +463,10 @@ export default class FeatureQueryResolver {
 
 						if (total === undefined) {
 							if (!!notifiy) {
-								replace(this.i18n.notification.totalError, {
-									store: storeId
-								});
+								replace(
+									this.i18n.notification.totalError,
+									{store: storeId}
+								);
 							}
 
 							return;
@@ -463,9 +475,10 @@ export default class FeatureQueryResolver {
 						if (total <= maxCount) {
 							return this.queryFeatures(storeId);
 						} else if (!!notifiy) {
-							replace(this.i18n.notification.tooManyFeatures, {
-								store: storeId
-							});
+							replace(
+								this.i18n.notification.tooManyFeatures,
+								{store: storeId}
+							);
 						}
 					}, this)
 				);
@@ -499,11 +512,17 @@ export default class FeatureQueryResolver {
 				}
 
 				if (!!zoom.factor) {
-					overallZoom.factor = Math.max(overallZoom.factor, zoom.factor);
+					overallZoom.factor = Math.max(
+						overallZoom.factor,
+						zoom.factor
+					);
 				}
 
 				if (!!zoom.defaultScale) {
-					overallZoom.defaultScale = Math.max(overallZoom.defaultScale, zoom.defaultScale);
+					overallZoom.defaultScale = Math.max(
+						overallZoom.defaultScale,
+						zoom.defaultScale
+					);
 				}
 
 				geometries = storedItems.map(item => item.geometry);
@@ -511,7 +530,11 @@ export default class FeatureQueryResolver {
 
 			if (geometries.length > 0) {
 				const overallExtent = this._calcExtent(geometries);
-				this._zoomTo(overallExtent, overallZoom.factor, overallZoom.defaultScale);
+				this._zoomTo(
+					overallExtent,
+					overallZoom.factor,
+					overallZoom.defaultScale
+				);
 			}
 		}, this);
 	}
@@ -520,8 +543,14 @@ export default class FeatureQueryResolver {
 		const storeIds = this.getRequestedStores();
 
 		storeIds.forEach(storeId => {
-			const propFilter = Object.assign({}, this.propFilters[storeId]);
-			const urlFilter = Object.assign({}, this.urlFilters[storeId]);
+			const propFilter = Object.assign(
+				{},
+				this.propFilters[storeId]
+			);
+			const urlFilter = Object.assign(
+				{},
+				this.urlFilters[storeId]
+			);
 			if (!this._isEmpty(propFilter) && !this._isEmpty(urlFilter)) {
 				this.filters[storeId] = {};
 				this.filters[storeId][this.propOperators[storeId]] = [
@@ -534,10 +563,20 @@ export default class FeatureQueryResolver {
 				this.filters[storeId] = urlFilter || {};
 			}
 
-			const propOptions = Object.assign({}, this.propOptions[storeId]);
-			const urlOptions = Object.assign({}, this.urlOptions[storeId]);
+			const propOptions = Object.assign(
+				{},
+				this.propOptions[storeId]
+			);
+			const urlOptions = Object.assign(
+				{},
+				this.urlOptions[storeId]
+			);
 			if (propOptions !== undefined && urlOptions !== undefined) {
-				this.options[storeId] = Object.assign({}, propOptions, urlOptions);
+				this.options[storeId] = Object.assign(
+					{},
+					propOptions,
+					urlOptions
+				);
 
 				const propCount = propOptions.count;
 				const urlCount = urlOptions.count;
