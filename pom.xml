@@ -21,7 +21,7 @@
 
 	<groupId>de.conterra.devnet</groupId>
 	<artifactId>devnet-mapapps-url-query</artifactId>
-	<version>3.0.1-SNAPSHOT</version>
+	<version>3.0.0</version>
 	<packaging>jar</packaging>
 
 	<repositories>
@@ -518,7 +518,7 @@
 		<connection>scm:git:https://github.com/conterra/mapapps-url-query.git</connection>
 		<developerConnection>scm:git:https://github.com/conterra/mapapps-url-query.git</developerConnection>
 		<url>https://github.com/conterra/mapapps-url-query</url>
-		<tag>HEAD</tag>
+		<tag>3.0.0</tag>
 	</scm>
 	<distributionManagement>
 		<repository>
