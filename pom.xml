@@ -516,9 +516,9 @@
 		</plugins>
 	</build>
 	<scm>
-		<connection>scm:git:https://github.com/conterra/${project.artifactId}.git</connection>
-		<developerConnection>scm:git:https://github.com/conterra/${project.artifactId}.git</developerConnection>
-		<url>https://github.com/conterra/${project.artifactId}</url>
+		<connection>scm:git:https://github.com/conterra/mapapps-url-query.git</connection>
+		<developerConnection>scm:git:https://github.com/conterra/mapapps-url-query.git</developerConnection>
+		<url>https://github.com/conterra/mapapps-url-query</url>
 		<tag>HEAD</tag>
 	</scm>
 	<distributionManagement>
