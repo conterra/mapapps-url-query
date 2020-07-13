@@ -3,7 +3,7 @@
 	"plugins": [
 		"vue"
 	],
-	"rules": {
+	"rules":   {
 		"indent": [
 			"error",
 			"tab"

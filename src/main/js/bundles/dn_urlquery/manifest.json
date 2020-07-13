@@ -1,54 +1,54 @@
 {
-	"name": "dn_urlquery",
-	"version": "3.0.3-SNAPSHOT",
+	"name":         "dn_urlquery",
+	"version":      "3.0.3-SNAPSHOT",
 	"dependencies": {
-		"map-widget": "^4.8.0",
-		"parametermanager": "^4.8.0",
-		"highlights": "^4.8.0",
+		"map-widget":            "^4.8.0",
+		"parametermanager":      "^4.8.0",
+		"highlights":            "^4.8.0",
 		"coordinatetransformer": "^4.8.0"
 	},
-	"main": "",
-	"components": [
+	"main":         "",
+	"components":   [
 		{
-			"name": "FeatureQueryResolver",
-			"provides": "parametermanager.Parametrizable",
+			"name":       "FeatureQueryResolver",
+			"provides":   "parametermanager.Parametrizable",
 			"properties": {
-				"notifications": true,
-				"zoomToResults": {
-					"activate": true,
-					"factor": 1,
+				"notifications":    true,
+				"zoomToResults":    {
+					"activate":     true,
+					"factor":       1,
 					"defaultScale": 25000
 				},
-				"autoInfo": false,
-				"stores": [],
+				"autoInfo":         false,
+				"stores":           [],
 				"animationOptions": {
-					"animate": true,
+					"animate":  true,
 					"duration": 500,
-					"easing": "ease-in-out"
+					"easing":   "ease-in-out"
 				}
 			},
 			"references": [
 				{
-					"name": "_log",
+					"name":      "_log",
 					"providing": "ct.framework.api.LogService"
 				},
 				{
-					"name": "_mapWidget",
-					"providing": "map-widget.MapWidgetModel",
+					"name":        "_mapWidget",
+					"providing":   "map-widget.MapWidgetModel",
 					"cardinality": "0..1"
 				},
 				{
-					"name": "_highlighter",
+					"name":      "_highlighter",
 					"providing": "highlights.HighlightService"
 				},
 				{
-					"name": "_coordinateTransformer",
-					"providing": "ct.api.coordinatetransformer.CoordinateTransformer",
+					"name":        "_coordinateTransformer",
+					"providing":   "ct.api.coordinatetransformer.CoordinateTransformer",
 					"cardinality": "0..1"
 				},
 				{
-					"name": "store",
-					"providing": "ct.api.Store",
+					"name":        "store",
+					"providing":   "ct.api.Store",
 					"cardinality": "0..n"
 				}
 			]

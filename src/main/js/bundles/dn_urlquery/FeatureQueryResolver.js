@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import when from "apprt-core/when";
 import customReplacer from "apprt-core/string-replace";
-import Geometry from "esri/geometry/Geometry";
-import Extent from "esri/geometry/Extent";
+import when           from "apprt-core/when";
+import Extent         from "esri/geometry/Extent";
+import Geometry       from "esri/geometry/Geometry";
 import geom_jsonUtils from "esri/geometry/support/jsonUtils";
 
 export default class FeatureQueryResolver {
