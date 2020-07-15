@@ -20,23 +20,23 @@ import Geometry       from "esri/geometry/Geometry";
 import geom_jsonUtils from "esri/geometry/support/jsonUtils";
 
 export default class FeatureQueryResolver {
-	stores = {};
+	stores  = {};
 	filters = {};
 	options = {};
 
-	propFilters = {};
-	propOptions = {};
-	propOperators = {};
-	propStoreNotifies = {};
-	propStoreZoom = {};
-	propStoreSymbols = {};
-	propAttributes = {};
+	propFilters            = {};
+	propOptions            = {};
+	propOperators          = {};
+	propStoreNotifies      = {};
+	propStoreZoom          = {};
+	propStoreSymbols       = {};
+	propAttributes         = {};
 	propStorePopupTemplate = {};
 
 	urlFilters = {};
 	urlOptions = {};
 
-	items = {};
+	items    = {};
 	graphics = {};
 
 	activate() {
@@ -46,13 +46,13 @@ export default class FeatureQueryResolver {
 
 		let notify = properties.notifications;
 		if (notify === undefined) {
-			notify = true
+			notify = true;
 		} else {
-			notify = !!notify
+			notify = !!notify;
 		}
 
-		const zoom = properties.zoomToResults;
-		zoom['activate'] = !!zoom.activate;
+		const zoom       = properties.zoomToResults;
+		zoom["activate"] = !!zoom.activate;
 
 		const propStores = properties.stores;
 		for (const storeId in propStores) {
@@ -60,7 +60,7 @@ export default class FeatureQueryResolver {
 
 			const propFilter = propStore.filter;
 			if (!this._isEmpty(propFilter)) {
-				this.propFilters[storeId] = propFilter;
+				this.propFilters[storeId]   = propFilter;
 				this.propOperators[storeId] = propStore.operator || "$and";
 			}
 
@@ -80,10 +80,10 @@ export default class FeatureQueryResolver {
 			if (propStoreZoom === undefined) {
 				this.propStoreZoom[storeId] = zoom;
 			} else {
-				this.propStoreZoom[storeId] = Object.assign(
-					{},
-					this.propStoreZoom[storeId],
-					zoom, propStoreZoom
+				this.propStoreZoom[storeId] = Object.assign({},
+															this.propStoreZoom[storeId],
+															zoom,
+															propStoreZoom
 				);
 			}
 
@@ -92,8 +92,8 @@ export default class FeatureQueryResolver {
 				this.propStoreSymbols[storeId] = propStoreSymbols;
 			}
 
-			let propStorePopupTemplate = propStore.popupTemplate;
-			const propStoreAttributes = propStore.attributes;
+			let propStorePopupTemplate    = propStore.popupTemplate;
+			const propStoreAttributes     = propStore.attributes;
 			const propStoreAgsstoreFields = propStore.agsstoreFields;
 
 			if (!this._isEmpty(propStorePopupTemplate)) {
@@ -103,17 +103,19 @@ export default class FeatureQueryResolver {
 
 				propStoreAgsstoreFields.forEach(agsstoreField => {
 					fieldInfos.push({
-						fieldName: agsstoreField["name"],
-						label: agsstoreField["title"]
-					});
+										fieldName: agsstoreField["name"],
+										label:     agsstoreField["title"]
+									});
 				});
 
 				propStorePopupTemplate = {
-					title: storeId,
-					content: [{
-						type: "fields",
-						fieldInfos: fieldInfos
-					}]
+					title:   storeId,
+					content: [
+						{
+							type:       "fields",
+							fieldInfos: fieldInfos
+						}
+					]
 				};
 
 				this.propStorePopupTemplate[storeId] = propStorePopupTemplate;
@@ -122,18 +124,19 @@ export default class FeatureQueryResolver {
 
 				propStoreAttributes.forEach(attribute => {
 					fieldInfos.push({
-						fieldName: attribute,
-						label: attribute
-					});
+										fieldName: attribute,
+										label:     attribute
+									});
 				});
 
-
 				this.propStorePopupTemplate[storeId] = {
-					title: storeId,
-					content: [{
-						type: "fields",
-						fieldInfos: fieldInfos
-					}]
+					title:   storeId,
+					content: [
+						{
+							type:       "fields",
+							fieldInfos: fieldInfos
+						}
+					]
 				};
 			}
 
@@ -174,7 +177,9 @@ export default class FeatureQueryResolver {
 	decodeURLParameter(/** JSON */ urlObject) {
 		urlObject = urlObject || {};
 
-		const queryString = this._getPropertyIgnoreCase(urlObject, "FeatureQuery");
+		const queryString = this._getPropertyIgnoreCase(urlObject,
+														"FeatureQuery"
+		);
 		if (queryString === undefined) {
 			return;
 		}
@@ -221,7 +226,7 @@ export default class FeatureQueryResolver {
 		}
 
 		// check if it is an object and has properties
-		if (!typeof item === 'object' && item !== null) {
+		if (!typeof item === "object" && item !== null) {
 			return true;
 		}
 		for (const key in item) {
@@ -262,7 +267,9 @@ export default class FeatureQueryResolver {
 	_removeArrayElements(/** Array */ array, ...elements) {
 		elements.forEach(element => {
 			let index;
-			while ((index = array.indexOf(element)) > -1) {
+			while ((
+					   index = array.indexOf(element)
+				   ) > -1) {
 				array.splice(index, 1);
 			}
 		});
@@ -272,7 +279,7 @@ export default class FeatureQueryResolver {
 
 	_getCurrentMapCRS() {
 		const mapState = this._mapState;
-		const wkid = mapState && mapState.getSpatialReference().wkid;
+		const wkid     = mapState && mapState.getSpatialReference().wkid;
 		return wkid;
 	}
 
@@ -280,38 +287,42 @@ export default class FeatureQueryResolver {
 		let geom = item.geometry;
 		if (!geom) {
 			console.warn(
-				"OmniSearchModel: search result contains no geometry, cannot show/draw item on map!"
-			);
+				"OmniSearchModel: search result contains no geometry, cannot show/draw item on map!");
 		}
-		if (!!geom && !(geom instanceof Geometry)) {
+		if (!!geom &&
+			!(
+				geom instanceof Geometry
+			)) {
 			console.warn(
-				"OmniSearchModel: geometry is not an esri.geometry.Geometry!"
-				+ " Try to parse plain json from it!"
-			);
+				"OmniSearchModel: geometry is not an esri.geometry.Geometry!" +
+				" Try to parse plain json from it!");
 			try {
 				geom = item.geometry = geom_jsonUtils.fromJson(geom);
 			} catch (e) {
-				console.warn(
-					"OmniSearchModel: geometry (" + geom + ") is not an esri.geometry.Geometry!"
-					+ " Parsing failed: " + e, e
-				);
+				console.warn("OmniSearchModel: geometry (" +
+							 geom +
+							 ") is not an esri.geometry.Geometry!" +
+							 " Parsing failed: " +
+							 e, e);
 				// clear from result
 				item.geometry = undefined;
-				geom = undefined;
+				geom          = undefined;
 			}
 		}
-		const mapWkid = this._getCurrentMapCRS();
+		const mapWkid               = this._getCurrentMapCRS();
 		const coordinateTransformer = this._coordinateTransformer;
 		if (!!mapWkid && !!coordinateTransformer) {
 			const extent = item.extent;
 			if (!!extent) {
-				item = when(coordinateTransformer.transform(extent, mapWkid)).then(extent => {
+				item = when(coordinateTransformer.transform(extent, mapWkid)).
+				then(extent => {
 					item.extent = extent;
 					return item;
 				});
 			}
 			if (!!geom) {
-				item = when(coordinateTransformer.transform(geom, mapWkid)).then(geometry => {
+				item = when(coordinateTransformer.transform(geom, mapWkid)).
+				then(geometry => {
 					item.geometry = geometry;
 					return item;
 				});
@@ -332,7 +343,12 @@ export default class FeatureQueryResolver {
 			if (!extent) {
 				const x = geometry.get("x");
 				const y = geometry.get("y");
-				extent = new Extent(x, y, x, y, geometry.get("spatialReference"));
+				extent  = new Extent(x,
+									 y,
+									 x,
+									 y,
+									 geometry.get("spatialReference")
+				);
 			}
 
 			if (!this._isEmpty(overallExtent)) {
@@ -345,26 +361,32 @@ export default class FeatureQueryResolver {
 		return overallExtent;
 	}
 
-	_zoomTo(/** Extent */ extent, /** float */ factor, /** integer */ defaultScale) {
+	_zoomTo(/** Extent */
+			extent, /** float */
+			factor, /** integer */
+			defaultScale
+	) {
 		if (!!this.handle) {
 			this.handle.remove();
 		}
 
-		this.handle = this._mapWidget.watch("view", event => {
-			const view = event.value;
+		this.handle = this._mapWidget.watch("ready", event => {
+			const view = this._mapWidget.view;
 			if (!!view) {
-				this.handle.remove();
-
 				view.when().then(() => {
 					if (!!extent) {
 						if (extent.height !== 0 || extent.width !== 0) {
-							view.goTo(extent.expand(factor), this.animationOptions);
+							view.goTo(extent.expand(factor),
+									  this.animationOptions
+							);
 						} else {
 							view.goTo({
-								target: extent.get("center"),
-								scale: defaultScale
-							}, this.animationOptions);
+										  target: extent.get("center"),
+										  scale:  defaultScale
+									  }, this.animationOptions);
 						}
+
+						this.handle.remove();
 					}
 				});
 			}
@@ -372,9 +394,8 @@ export default class FeatureQueryResolver {
 	}
 
 	getRequestedStores() {
-		return this._mergeArrays(
-			Object.keys(this.urlFilters),
-			Object.keys(this.urlOptions)
+		return this._mergeArrays(Object.keys(this.urlFilters),
+								 Object.keys(this.urlOptions)
 		);
 	}
 
@@ -393,9 +414,8 @@ export default class FeatureQueryResolver {
 
 		graphics.forEach(graphic => {
 			graphic.remove();
-			this.graphics[storeId] = this._removeArrayElements(
-				this.graphics[storeId],
-				graphic
+			this.graphics[storeId] = this._removeArrayElements(this.graphics[storeId],
+															   graphic
 			);
 		});
 	}
@@ -411,16 +431,18 @@ export default class FeatureQueryResolver {
 			"polyline-3d",
 			"polygon-3d"
 		];
-		const symbols = Object.assign({}, this.propStoreSymbols[storeId]);
+		const symbols  = Object.assign({}, this.propStoreSymbols[storeId]);
 		geoTypes.forEach(geoType => {
 			if (!symbols[geoType]) {
-				symbols[geoType] = this.symbols[geoType]
+				symbols[geoType] = this.symbols[geoType];
 			}
 		}, this);
 
 		const popupTemplate = this.propStorePopupTemplate[storeId];
 
-		const featureQuery = this.stores[storeId].query(this.filters[storeId], this.options[storeId]);
+		const featureQuery = this.stores[storeId].query(this.filters[storeId],
+														this.options[storeId]
+		);
 		return when(featureQuery, results => {
 			const items = results.filter(result => !!result.geometry);
 
@@ -437,20 +459,24 @@ export default class FeatureQueryResolver {
 
 				return item;
 			}, this);
-			const popupItems = symbolItems.map(item => {
+			const popupItems  = symbolItems.map(item => {
 				if (!this._isEmpty(popupTemplate)) {
 					item.popupTemplate = popupTemplate;
 
 					const attributes = this.propAttributes[storeId];
 					if (Array.isArray(attributes)) {
 						item["attributes"] = {};
-						attributes.forEach(attribute => item["attributes"][attribute] = item[attribute], this);
+						attributes.forEach(
+							attribute => item["attributes"][attribute] = item[attribute],
+							this
+						);
 					}
 				}
 
 				return item;
 			}, this);
-			const transItems = popupItems.map(item => this._transformGeometry(item));
+			const transItems  = popupItems.map(item => this._transformGeometry(
+				item));
 
 			return when(Promise.all(transItems)).then(items => {
 				items.forEach(item => {
@@ -469,13 +495,14 @@ export default class FeatureQueryResolver {
 
 		storeIds.forEach(storeId => {
 			const store = this.stores[storeId];
-			let filter = this.filters[storeId];
-			let option = this.options[storeId];
+			let filter  = this.filters[storeId];
+			let option  = this.options[storeId];
 
-			if (
-				store === undefined
-				|| (filter === undefined && option === undefined)
-			) {
+			if (store ===
+				undefined ||
+				(
+					filter === undefined && option === undefined
+				)) {
 				return;
 			}
 
@@ -491,51 +518,44 @@ export default class FeatureQueryResolver {
 			filter = filter || {};
 
 			if (maxCount > 0) {
-				const countOptions = Object.assign(
-					{},
-					option,
-					{count: 0}
-				);
+				const countOptions = Object.assign({}, option, {count: 0});
 
 				// remove the sort operation, because it is not supported on counting requests
 				delete countOptions.sort;
 
 				const countQuery = store.query(filter, countOptions);
 
-				storeQueries.push(
-					when(countQuery).then(result => {
-						const total = result["total"];
+				storeQueries.push(when(countQuery).then(result => {
+					const total = result["total"];
 
-						const notifiy = (
-							this._log !== undefined
-							&& this.propStoreNotifies[storeId]
-						);
+					const notifiy = (
+						this._log !==
+						undefined &&
+						this.propStoreNotifies[storeId]
+					);
 
-						const replace = customReplacer({
-							valueNotFound: ""
-						});
+					const replace = customReplacer({
+													   valueNotFound: ""
+												   });
 
-						if (total === undefined) {
-							if (!!notifiy) {
-								replace(
-									this.i18n.notification.totalError,
+					if (total === undefined) {
+						if (!!notifiy) {
+							replace(this.i18n.notification.totalError,
 									{store: storeId}
-								);
-							}
-
-							return;
-						}
-
-						if (total <= maxCount) {
-							return this.queryFeatures(storeId);
-						} else if (!!notifiy) {
-							replace(
-								this.i18n.notification.tooManyFeatures,
-								{store: storeId}
 							);
 						}
-					}, this)
-				);
+
+						return;
+					}
+
+					if (total <= maxCount) {
+						return this.queryFeatures(storeId);
+					} else if (!!notifiy) {
+						replace(this.i18n.notification.tooManyFeatures,
+								{store: storeId}
+						);
+					}
+				}, this));
 			} else {
 				storeQueries.push(this.queryFeatures(storeId));
 			}
@@ -543,7 +563,7 @@ export default class FeatureQueryResolver {
 
 		when(Promise.all(storeQueries)).then(() => {
 			const overallZoom = {
-				factor: Number.MIN_VALUE,
+				factor:       Number.MIN_VALUE,
 				defaultScale: 1
 			};
 
@@ -553,29 +573,31 @@ export default class FeatureQueryResolver {
 				if (!!storedItems && storedItems.length > 0) {
 					storedItems.map(item => {
 						return {
-							item: item,
+							item:    item,
 							storeId: storeId
-						}
+						};
 					});
 				}
 
 				const zoom = this.propStoreZoom[storeId];
 
-				if (!zoom || !(zoom.activate) || !storedItems) {
+				if (!zoom ||
+					!(
+						zoom.activate
+					) ||
+					!storedItems) {
 					return;
 				}
 
 				if (!!zoom.factor) {
-					overallZoom.factor = Math.max(
-						overallZoom.factor,
-						zoom.factor
+					overallZoom.factor = Math.max(overallZoom.factor,
+												  zoom.factor
 					);
 				}
 
 				if (!!zoom.defaultScale) {
-					overallZoom.defaultScale = Math.max(
-						overallZoom.defaultScale,
-						zoom.defaultScale
+					overallZoom.defaultScale = Math.max(overallZoom.defaultScale,
+														zoom.defaultScale
 					);
 				}
 
@@ -584,10 +606,9 @@ export default class FeatureQueryResolver {
 
 			if (geometries.length > 0) {
 				const overallExtent = this._calcExtent(geometries);
-				this._zoomTo(
-					overallExtent,
-					overallZoom.factor,
-					overallZoom.defaultScale
+				this._zoomTo(overallExtent,
+							 overallZoom.factor,
+							 overallZoom.defaultScale
 				);
 			}
 		}, this);
@@ -597,16 +618,10 @@ export default class FeatureQueryResolver {
 		const storeIds = this.getRequestedStores();
 
 		storeIds.forEach(storeId => {
-			const propFilter = Object.assign(
-				{},
-				this.propFilters[storeId]
-			);
-			const urlFilter = Object.assign(
-				{},
-				this.urlFilters[storeId]
-			);
+			const propFilter = Object.assign({}, this.propFilters[storeId]);
+			const urlFilter  = Object.assign({}, this.urlFilters[storeId]);
 			if (!this._isEmpty(propFilter) && !this._isEmpty(urlFilter)) {
-				this.filters[storeId] = {};
+				this.filters[storeId]                              = {};
 				this.filters[storeId][this.propOperators[storeId]] = [
 					propFilter,
 					urlFilter
@@ -617,26 +632,20 @@ export default class FeatureQueryResolver {
 				this.filters[storeId] = urlFilter || {};
 			}
 
-			const propOptions = Object.assign(
-				{},
-				this.propOptions[storeId]
-			);
-			const urlOptions = Object.assign(
-				{},
-				this.urlOptions[storeId]
-			);
+			const propOptions = Object.assign({}, this.propOptions[storeId]);
+			const urlOptions  = Object.assign({}, this.urlOptions[storeId]);
 			if (propOptions !== undefined && urlOptions !== undefined) {
-				this.options[storeId] = Object.assign(
-					{},
-					propOptions,
-					urlOptions
+				this.options[storeId] = Object.assign({},
+													  propOptions,
+													  urlOptions
 				);
 
 				const propCount = propOptions.count;
-				const urlCount = urlOptions.count;
-				const minCount = Math.min(
-					isNaN(propCount) ? Infinity : propCount,
-					isNaN(urlCount) ? Infinity : urlCount
+				const urlCount  = urlOptions.count;
+				const minCount  = Math.min(isNaN(propCount) ?
+										   Infinity :
+										   propCount,
+										   isNaN(urlCount) ? Infinity : urlCount
 				);
 				if (!isNaN(minCount)) {
 					this.options[storeId].count = minCount;
@@ -647,13 +656,11 @@ export default class FeatureQueryResolver {
 				this.options[storeId] = urlOptions || {};
 			}
 
-			Object.assign(
-				this.options[storeId],
-				{
-					fields: {
-						geometry: 1
-					}
-				});
+			Object.assign(this.options[storeId], {
+				fields: {
+					geometry: 1
+				}
+			});
 		}, this);
 
 		this.queryStores(storeIds);
