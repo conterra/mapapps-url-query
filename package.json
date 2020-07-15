@@ -1,13 +1,13 @@
 {
-	"name": "dn_urlquery",
-	"description": "build URL Query bundle",
-	"version": "3.0.3-SNAPSHOT",
+	"name":            "dn_urlquery",
+	"description":     "build URL Query bundle",
+	"version":         "3.0.4-SNAPSHOT",
 	"devDependencies": {
-		"ct-mapapps-gulp-js": "^0.4.4",
-		"vue-template-compiler": "2.6.6",
-		"puppeteer": "^3.1.0",
-		"eslint-config-ct-prodeng": "^1.1.10",
+		"ct-mapapps-gulp-js":          "^0.4.4",
+		"vue-template-compiler":       "2.6.6",
+		"puppeteer":                   "^3.1.0",
+		"eslint-config-ct-prodeng":    "^1.1.10",
 		"stylelint-config-ct-prodeng": "1.0.2",
-		"@types/arcgis-js-api": "4.13.0"
+		"@types/arcgis-js-api":        "4.13.0"
 	}
 }
