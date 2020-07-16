@@ -1,6 +1,7 @@
 # URL Query
 This bundle queries features by an URL parameter.
-So you are able to query features by their metadata and show them on app startup.
+So you are able to query features by their metadata and show them on app
+startup.
 
 Sample App
 ------------------
@@ -23,7 +24,12 @@ https://demos.conterra.de/mapapps/resources/jsregistry/root/index.html?lang=en#b
 
 All other configuration is optional.
 
-To enable notification and feature information, you have to enable the bundles ```notifier``` and ```featureinfo```.
+To enable notification and feature information, you have to enable the bundles
+```notifier``` and ```featureinfo```.
+
+Be careful, to use the url parameters to define the viewpoint of an app together
+with this bundle. Only one could win and the initial status could be changed on
+every site reload.
 
 #### Configurable Components of dn_urlquery
 
@@ -84,7 +90,8 @@ To enable notification and feature information, you have to enable the bundles `
 Development Guide
 ------------------
 ### Define the mapapps remote base
-Before you can run the project you have to define the mapapps.remote.base property in the pom.xml-file:
+Before you can run the project you have to define the mapapps.remote.base
+property in the pom.xml-file:
 `<mapapps.remote.base>http://%YOURSERVER%/ct-mapapps-webapp-%VERSION%</mapapps.remote.base>`
 
 ##### Other methods to to define the mapapps.remote.base property.

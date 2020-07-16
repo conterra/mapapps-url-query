@@ -361,36 +361,57 @@ export default class FeatureQueryResolver {
 		return overallExtent;
 	}
 
+	_handleZoomTo(
+		view, /** Extent */
+		extent, /** float */
+		factor, /** integer */
+		defaultScale
+	) {
+		if (!!extent) {
+			if (extent.height !== 0 || extent.width !== 0) {
+				view.goTo(extent.expand(factor), this.animationOptions);
+			} else {
+				view.goTo({
+							  target: extent.get("center"),
+							  scale:  defaultScale
+						  }, this.animationOptions);
+			}
+		}
+	}
+
 	_zoomTo(/** Extent */
 			extent, /** float */
 			factor, /** integer */
 			defaultScale
 	) {
-		if (!!this.handle) {
-			this.handle.remove();
+		if (!!this.zoomHandler) {
+			this.zoomHandler.remove();
+			delete this.zoomHandler;
 		}
 
-		this.handle = this._mapWidget.watch("ready", event => {
-			const view = this._mapWidget.view;
-			if (!!view) {
-				view.when().then(() => {
-					if (!!extent) {
-						if (extent.height !== 0 || extent.width !== 0) {
-							view.goTo(extent.expand(factor),
-									  this.animationOptions
+		const view = this._mapWidget.view;
+		if (!!this._mapWidget.ready && !!view) {
+			this._handleZoomTo(view, extent, factor, defaultScale);
+		} else {
+			this.zoomHandler = this._mapWidget.watch("ready", event => {
+				const ready = event.value;
+				if (!!ready) {
+					const view = this._mapWidget.view;
+					if (!!view) {
+						view.when().then(() => {
+							this._handleZoomTo(view,
+											   extent,
+											   factor,
+											   defaultScale
 							);
-						} else {
-							view.goTo({
-										  target: extent.get("center"),
-										  scale:  defaultScale
-									  }, this.animationOptions);
-						}
 
-						this.handle.remove();
+							this.zoomHandler.remove();
+							delete this.zoomHandler;
+						});
 					}
-				});
-			}
-		});
+				}
+			});
+		}
 	}
 
 	getRequestedStores() {
