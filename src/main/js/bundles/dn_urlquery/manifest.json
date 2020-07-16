@@ -1,6 +1,6 @@
 {
 	"name":         "dn_urlquery",
-	"version":      "3.0.4",
+	"version":      "3.0.5-SNAPSHOT",
 	"dependencies": {
 		"map-widget":            "^4.8.0",
 		"parametermanager":      "^4.8.0",
