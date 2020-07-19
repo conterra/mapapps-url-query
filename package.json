@@ -1,7 +1,7 @@
 {
 	"name":            "dn_urlquery",
 	"description":     "build URL Query bundle",
-	"version":         "3.0.4-SNAPSHOT",
+	"version":         "3.0.5-SNAPSHOT",
 	"devDependencies": {
 		"ct-mapapps-gulp-js":          "^0.4.4",
 		"vue-template-compiler":       "2.6.6",
