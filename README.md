@@ -34,7 +34,7 @@ every site reload.
 #### Configurable Components of dn_urlquery
 
 ##### FeatureQueryResolver
-```json
+```javascript
       "FeatureQueryResolver": {
         "notifications": false,
         "zoomToResults": {
