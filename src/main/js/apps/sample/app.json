@@ -61,7 +61,7 @@
                     "omniSearchDefaultLabel": "Country code...",
                     "fetchIdProperty": true,
                     "enablePagination": false,
-                    "type": "Dynamic"
+                    "type": "feature"
                 }
             ]
         },
