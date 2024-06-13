@@ -7,7 +7,6 @@
         "highlights": "^4.8.0",
         "coordinatetransformer": "^4.8.0"
     },
-    "main": "",
     "components": [
         {
             "name": "FeatureQueryResolver",
