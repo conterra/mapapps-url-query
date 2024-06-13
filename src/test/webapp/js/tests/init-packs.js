@@ -13,18 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-define({
-		   root: {
-			   contentviewer: {
-				   urlinfo: {
-					   title:        "Examples",
-					   content:      "<p>The following links are examples to start queries with the URL Query bundle:</p>",
-					   countryText:  "All countries, which ISO-code starts with 'F'",
-					   waterText:    "All 'good' water quality on 2004 in Belgium",
-					   combinedText: "Combination of the first two examples",
-					   autoInfoText: "Show only one feature, with additional information"
-				   }
-			   }
-		   },
-		   "de": true
-	   });
+if (require.packs["@vue/test-utils"]) {
+    require.packs["@vue/test-utils"].main = "dist/vue-test-utils.umd";
+}
+if (require.packs["chai"]) {
+    require.packs["chai"].main = "chai";
+}
