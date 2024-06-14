@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 export default {
-    root: (
-        {
-            bundleName: "URL Query",
-            bundleDescription: "This bundle queries features by an URL parameter.",
-            notifications: {
-                totalError: "An error occurred by getting total of results from store ${store}!",
-                tooManyFeatures: "Too many features requested from store ${store}!"
-            }
-        }
-    ),
-    "de": true
+	root: ({
+		bundleName: "URL Query",
+		bundleDescription: "This bundle queries features by an URL parameter.",
+		notifications: {
+			totalError: "An error occurred by getting total of results from store ${store}!",
+			tooManyFeatures: "Too many features requested from store ${store}!"
+		}
+	}),
+	"de": true
 };
