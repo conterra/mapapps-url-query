@@ -1,3 +1,5 @@
+⚠️ This bundle is no longer in active development.
+
 # URL Query
 This bundle queries features by an URL parameter.
 So you are able to query features by their metadata and show them on app
